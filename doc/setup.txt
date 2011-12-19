@@ -1,0 +1,4 @@
+#setup the following params 
+WARDEN_CONFIG_DIR=/Users/victor/work/test_fw/config
+WARDEN_HOME=/Users/victor/work/test_fw
+
