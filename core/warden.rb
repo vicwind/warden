@@ -5,6 +5,7 @@ module Warden
   
   SCREEN_CAPTURE_DIR = "#{ENV["WARDEN_HOME"]}/screen-capture"
   APP_ENV = YAML.load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
+
   def load_config
       @app_domain =  APP_ENV["app_environment"][app_env]
   end
@@ -17,9 +18,6 @@ module Warden
     @e = val
   end
 
-  def self.test_123()
-    puts "=============================="
-  end
 
   def current_project_name
 
@@ -43,7 +41,7 @@ module Warden
     end
   end
 
-  #used to store state duringthe cucumber feature execution
+  #used to store state during the cucumber feature execution
   class Warden_Session
     def initialize( cucumber_scenario )
       @current_scenario = cucumber_scenario

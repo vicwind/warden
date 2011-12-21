@@ -1,7 +1,7 @@
 Feature:
   The first buying guide test
   Scenario: test case 1
-    Given i am on the buying guide page
+    Given Change to default test target environment for the test application
     When i am inside the netbook category
     Then i should be able to see all netbooks
 
