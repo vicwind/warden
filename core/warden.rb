@@ -46,8 +46,14 @@ module Warden
   #used to store state during the cucumber feature execution
   class Warden_Session
     def initialize( cucumber_scenario )
-      @current_scenario = cucumber_scenario
-      @current_feature  = cucumber_scenario.feature
+      if cucumber_scenario.class == Cucumber::Ast::OutlineTable::ExampleRow #for senario outline
+        @current_scenario = cucumber_scenario
+        @current_scenario_outline = cucumber_scenario.scenario_outline
+        @current_feature  = cucumber_scenario.scenario_outline.feature
+      else
+        @current_scenario = cucumber_scenario
+        @current_feature  = cucumber_scenario.feature
+      end
       #this line has to be ran after @current_feature has been set properly
       @current_featuer_data = load_current_feature_data()
     end
