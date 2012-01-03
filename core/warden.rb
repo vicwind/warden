@@ -75,8 +75,13 @@ module Warden
       feature_data
     end
 
+    #return the accorsponding senario in the feature data yml
     def feature_data
-      @current_featuer_data[scenario_name()]
+      if @current_featuer_data and @current_featuer_data[scenario_name()]
+        @current_featuer_data[scenario_name()]
+      else
+        nil
+      end
     end
 
   end
