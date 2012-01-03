@@ -14,7 +14,6 @@ World(Warden)
 
 Capybara.configure do |config|
   config.run_server = false
-  config.app_host = Warden::APP_ENV["prd"]["BB.ca Web BG"]
   config.default_driver = :selenium
   config.default_wait_time = 20 #for ajax heavy site, site it to a higher number
 end
@@ -37,7 +36,8 @@ Before do |scenario|
   #debugger
   #browser.open()
   @warden_session = Warden::Warden_Session.new(scenario)
-  #@warden_session.current_scenario = 
+  #make feature data avaiable in steps
+  @fd = OpenStruct.new( @warden_session.feature_data() )
 
 end
 
