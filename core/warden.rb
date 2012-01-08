@@ -61,7 +61,9 @@ module Warden
     attr_accessor :current_scenario, :current_feature
 
     def scenario_name
-      @current_scenario.name
+      #use secenario outline's name if the current senario
+      #is a row in a example group
+      @current_scenario_outline? @current_scenario_outline.name : @current_scenario.name
     end
 
     def feature_name
@@ -75,7 +77,7 @@ module Warden
       begin
         feature_data = YAML::load_file( feature_name().sub( /\.feature$/, ".yml" ) )
       rescue Errno::ENOENT => err
-        puts "Feature #{feature_name()} data file not found."
+        #puts "Feature #{feature_name()} data file not found."
       end
 
       feature_data
