@@ -11,6 +11,8 @@ World(Warden)
 # module Capybara
   # include Warden
 # end
+Debugger.settings[:autoeval] = true
+Debugger.settings[:autolist] = 0
 
 Capybara.configure do |config|
   config.run_server = false
@@ -42,5 +44,32 @@ Before do |scenario|
 end
 
 After do |scenario|
-  embed_screenshot("screenshot-#{Time.new.to_i}", scenario) # if scenario.failed?
+  begin
+    embed_screenshot("screenshot-#{Time.new.to_i}", scenario) # if scenario.failed?
+    if scenario.failed? and ENV["WARDEN_DEBUG_MODE"] == "true"
+      print "\nYou are in ruby debug mode.\n"
+      print scenario.exception.message + "\n"
+      print scenario.exception.backtrace.join("\n")
+      print "\n\n"
+      Debugger.start do
+        debugger
+        puts "OK."
+      end
+    end
+  rescue Exception => e
+    #display any exception in the After block, otherwise it will be captured
+    #sinked by Cucumber
+    puts 
+    puts "Exception happened inside the After hook:"
+    puts e.message
+    puts scenario.exception.backtrace.join("\n")
+    raise e
+  end
+
 end
+
+# AfterStep do |scenario|
+  
+
+# end
+
