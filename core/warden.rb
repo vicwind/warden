@@ -1,7 +1,7 @@
 module Warden
   require 'yaml'
   require 'capybara/cucumber'
-  require 'ostruct' #provids dot access to hashes value
+  require 'ostruct' #provids dot access to hash value
 
   include Capybara::DSL
   
@@ -33,9 +33,20 @@ module Warden
 
   end
 
-  def embed_screenshot(id,scenario)
+  def embed_screenshot(id, scenario)
     #%x(scrot #{$ROOT_PATH}/images/#{id}.png)
-    file_path = "#{SCREEN_CAPTURE_DIR}/#{scenario.name.gsub(/ /,'_')}-#{Time.now.strftime("%m%d%Y_%H%M%S")}.jpg"
+    project_name = ENV["WARDEN_TEST_TARGET_NAME"]
+    image_capture_project_path = "#{SCREEN_CAPTURE_DIR}/#{project_name}"
+    
+    unless Dir.exist?( image_capture_project_path )
+      Dir.mkdir( image_capture_project_path )
+    end
+
+    feature_name = @warden_session.feature_name()
+    
+    image_capture_file_name = "#{feature_name}-#{scenario.name.gsub(/[ \.'"\?]/,'_')}" + 
+      "-#{Time.now.strftime("%m%d%Y_%H%M%S")}.jpg"
+    file_path = "#{image_capture_project_path}/#{image_capture_file_name}"
     #puts "image file:" + file_path
 
     File.open(file_path,'wb') do |f|
@@ -66,8 +77,12 @@ module Warden
       @current_scenario_outline? @current_scenario_outline.name : @current_scenario.name
     end
 
-    def feature_name
+    def feature_file_name
       @current_feature.file
+    end
+
+    def feature_name
+      @current_feature.file.match(/\/([^\/]*)\.feature/)[1]
     end
 
     #Reads the feature data(test data) from an yaml file, which
@@ -75,9 +90,9 @@ module Warden
     def load_current_feature_data
       feature_data = nil
       begin
-        feature_data = YAML::load_file( feature_name().sub( /\.feature$/, ".yml" ) )
+        feature_data = YAML::load_file( feature_file_name().sub( /\.feature$/, ".yml" ) )
       rescue Errno::ENOENT => err
-        #puts "Feature #{feature_name()} data file not found."
+        #puts "Feature #{feature_file_name()} data file not found."
       end
 
       feature_data
