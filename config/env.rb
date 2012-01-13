@@ -46,7 +46,8 @@ end
 After do |scenario|
   begin
     embed_screenshot("screenshot-#{Time.new.to_i}", scenario) # if scenario.failed?
-    if scenario.failed? and ENV["WARDEN_DEBUG_MODE"] == "true"
+    if scenario.failed? and ( ENV["WARDEN_DEBUG_MODE"] and 
+                             ENV["WARDEN_DEBUG_MODE"] == "true")
       print "\nYou are in ruby debug mode.\n"
       print scenario.exception.message + "\n"
       print scenario.exception.backtrace.join("\n")
