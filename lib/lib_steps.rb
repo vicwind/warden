@@ -1,8 +1,3 @@
-When /^i change app environment "(.*)"$/ do |app_env|
-  Capybara.app_host = Warden::APP_ENV[app_env]["BB.ca Web BG"]
-  visit("/")
-end
-
 When /^Change test target environment to "(.*)" for "(.*)" application$/ do |app_env, app_name|
   Capybara.app_host = Warden::APP_ENV[app_env][app_name]
   visit("/")
@@ -18,4 +13,7 @@ When /^Change to default test target environment for the test application$/ do
   visit("/")
 end
 
+Given /^The user has changed to the default test target environment for the test application$/ do
+  step "Change to default test target environment for the test application"
+end
 
