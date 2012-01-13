@@ -3,6 +3,7 @@ require 'sauce'
 require 'ruby-debug'
 require "#{File.dirname(__FILE__)}/../lib/lib_steps"
 require "#{File.dirname(__FILE__)}/../core/warden"
+require "#{File.dirname(__FILE__)}/../lib/link_checker"
 
 World(Warden)
 
@@ -13,6 +14,10 @@ World(Warden)
 # end
 Debugger.settings[:autoeval] = true
 Debugger.settings[:autolist] = 0
+
+# Cleanup log folder before run, this needs to be more
+# sophisticated.
+FileUtils.rm Dir.glob("#{ENV["WARDEN_HOME"]}log/*.yaml")
 
 Capybara.configure do |config|
   config.run_server = false
@@ -30,17 +35,12 @@ Sauce.config do |config|
   config.browser_version = "7"
 end
 
-
-
-
-
 Before do |scenario|
   #debugger
   #browser.open()
   @warden_session = Warden::Warden_Session.new(scenario)
   #make feature data avaiable in steps
   @fd = OpenStruct.new( @warden_session.feature_data() )
-
 end
 
 After do |scenario|

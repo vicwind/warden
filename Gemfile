@@ -4,5 +4,6 @@ gem "rspec"
 gem "capybara"
 gem "sauce"
 gem "ruby-debug19"
+gem "typhoeus"
 
 
