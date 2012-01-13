@@ -13,7 +13,10 @@ When /^Change to default test target environment for the test application$/ do
   visit("/")
 end
 
-Given /^The user has changed to the default test target environment for the test application$/ do
+Given /^[T|t]he user has changed to the default test target environment for the test application$/ do
   step "Change to default test target environment for the test application"
 end
 
+# Given /^the user has changed to the default test target environment for the test application$/ do
+  # step "Change to default test target environment for the test application"
+# end
