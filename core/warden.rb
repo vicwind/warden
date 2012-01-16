@@ -82,8 +82,15 @@ module Warden
     end
 
     def feature_name
-      @current_feature.file.match(/\/([^\/]*)\.feature/)[1]
+      result = @current_feature.file.split('/')[-1]
+      if result #file path name that contains "/"
+        return result[-1]
+      else
+        #contains only the file name
+        return @current_feature.file
+      end
     end
+
 
     #Reads the feature data(test data) from an yaml file, which
     #has the file name of the feature file
