@@ -36,7 +36,6 @@ Sauce.config do |config|
 end
 
 Before do |scenario|
-  #debugger
   #browser.open()
   @warden_session = Warden::Warden_Session.new(scenario)
   #make feature data avaiable in steps
@@ -45,8 +44,8 @@ end
 
 After do |scenario|
   begin
-    #debugger
-    embed_screenshot("screenshot-#{Time.new.to_i}", scenario) # if scenario.failed?
+    @warden_session.capture_screen_shot()# if scenario.failed?
+    
     if scenario.failed? and ENV["WARDEN_DEBUG_MODE"] == "true"
       print "\nYou are in ruby debug mode.\n"
       print scenario.exception.message + "\n"

@@ -33,21 +33,15 @@ module Warden
 
   end
 
-  def embed_screenshot(id, scenario)
+  def embed_screenshot( image_capture_file_name )
     #%x(scrot #{$ROOT_PATH}/images/#{id}.png)
     project_name = ENV["WARDEN_TEST_TARGET_NAME"]
     image_capture_project_path = "#{SCREEN_CAPTURE_DIR}/#{project_name}"
-    
+
     unless Dir.exist?( image_capture_project_path )
       Dir.mkdir( image_capture_project_path )
     end
-
-    feature_name = @warden_session.feature_name()
-    
-    image_capture_file_name = "#{feature_name}-#{scenario.name.gsub(/[ \.'"\?]/,'_')}" + 
-      "-#{Time.now.strftime("%m%d%Y_%H%M%S")}.jpg"
     file_path = "#{image_capture_project_path}/#{image_capture_file_name}"
-    #puts "image file:" + file_path
 
     File.open(file_path,'wb') do |f|
       f.write(Base64.decode64(page.driver.browser.screenshot_as(:base64)))
@@ -56,6 +50,8 @@ module Warden
 
   #used to store state during the cucumber feature execution
   class Warden_Session
+    include Warden
+
     def initialize( cucumber_scenario )
       if cucumber_scenario.class == Cucumber::Ast::OutlineTable::ExampleRow #for senario outline
         @current_scenario = cucumber_scenario
@@ -82,13 +78,14 @@ module Warden
     end
 
     def feature_name
-      result = @current_feature.file.split('/')[-1]
-      if result #file path name that contains "/"
-        return result[-1]
-      else
-        #contains only the file name
-        return @current_feature.file
-      end
+      # result = @current_feature.file.split('/')[-1]
+      # if result #file path name that contains "/"
+        # return result[-1]
+      # else
+        # #contains only the file name
+        # return @current_feature.file
+      # end
+      @current_feature.file.split('/')[-1]
     end
 
 
@@ -114,6 +111,24 @@ module Warden
       end
     end
 
-  end
+    #parameter:
+    #  prefix: this string will be used as prefix of the file name
+    #  scenario: the cucumber scenario object
+    #
+    def capture_screen_shot_base( scenario,  prefix = '' )
+      feature_name = feature_name()
+
+      image_capture_file_name = "#{feature_name}-#{scenario.name.gsub(/[ \.'"\?]/,'_')}" + 
+      "-#{Time.now.strftime("%m%d%Y_%H%M%S")}.jpg"
+      #puts "image file:" + file_path
+      embed_screenshot( image_capture_file_name )
+    end
+
+    #users should uses this methods to capture screen shot in the step definition
+    def capture_screen_shot( prefix = '')
+      capture_screen_shot_base( @current_scenario , prefix )
+    end
+
+  end #end of warden_session class
 
 end
