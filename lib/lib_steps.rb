@@ -17,6 +17,10 @@ Given /^[T|t]he user has changed to the default test target environment for the 
   step "Change to default test target environment for the test application"
 end
 
+Then /^Capture the screen shot$/ do
+  @warden_session.capture_screen_shot()
+end
+
 # Given /^the user has changed to the default test target environment for the test application$/ do
   # step "Change to default test target environment for the test application"
 # end

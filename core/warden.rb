@@ -33,6 +33,7 @@ module Warden
 
   end
 
+  #uses capybara's page driver to do screen capturing
   def embed_screenshot( image_capture_file_name )
     #%x(scrot #{$ROOT_PATH}/images/#{id}.png)
     project_name = ENV["WARDEN_TEST_TARGET_NAME"]
@@ -120,6 +121,8 @@ module Warden
 
       image_capture_file_name = "#{feature_name}-#{scenario.name.gsub(/[ \.'"\?]/,'_')}" + 
       "-#{Time.now.strftime("%m%d%Y_%H%M%S")}.jpg"
+      image_capture_file_name = ( prefix != '' )? prefix + "-" + 
+        image_capture_file_name : image_capture_file_name
       #puts "image file:" + file_path
       embed_screenshot( image_capture_file_name )
     end
