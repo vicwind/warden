@@ -45,9 +45,9 @@ end
 
 After do |scenario|
   begin
+    #debugger
     embed_screenshot("screenshot-#{Time.new.to_i}", scenario) # if scenario.failed?
-    if scenario.failed? and ( ENV["WARDEN_DEBUG_MODE"] and 
-                             ENV["WARDEN_DEBUG_MODE"] == "true")
+    if scenario.failed? and ENV["WARDEN_DEBUG_MODE"] == "true"
       print "\nYou are in ruby debug mode.\n"
       print scenario.exception.message + "\n"
       print scenario.exception.backtrace.join("\n")
@@ -60,10 +60,10 @@ After do |scenario|
   rescue Exception => e
     #display any exception in the After block, otherwise it will be captured
     #sinked by Cucumber
-    puts 
-    puts "Exception happened inside the After hook:"
-    puts e.message
-    puts scenario.exception.backtrace.join("\n")
+    print "\n"
+    print "Exception happened inside the After hook:"
+    print e.message
+    print e.backtrace[0..10].join("\n")
     raise e
   end
 
