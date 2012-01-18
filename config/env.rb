@@ -37,7 +37,6 @@ Sauce.config do |config|
 end
 
 Before do |scenario|
-  #debugger
   #browser.open()
   @warden_session = Warden::Warden_Session.new(scenario)
   #make feature data avaiable in steps
@@ -46,7 +45,8 @@ end
 
 After do |scenario|
   begin
-    embed_screenshot("screenshot-#{Time.new.to_i}", scenario) # if scenario.failed?
+    @warden_session.capture_screen_shot()# if scenario.failed?
+    
     if scenario.failed? and ENV["WARDEN_DEBUG_MODE"] == "true"
       print "\nYou are in ruby debug mode.\n"
       print scenario.exception.message + "\n"
@@ -60,10 +60,10 @@ After do |scenario|
   rescue Exception => e
     #display any exception in the After block, otherwise it will be captured
     #sinked by Cucumber
-    puts 
-    puts "Exception happened inside the After hook:"
-    puts e.message
-    puts scenario.exception.backtrace.join("\n")
+    print "\n"
+    print "Exception happened inside the After hook:"
+    print e.message
+    print e.backtrace[0..10].join("\n")
     raise e
   end
 

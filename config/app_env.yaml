@@ -3,6 +3,7 @@ app_environment:
   prd:
     'BB.ca Web BG': http://bg2011.ihvweb.com/bg/init/?inst_id=217&impl_id=300&locale=en_us # the key is the application mame
     'HP Buying Guide': http://hp.com/buing_guide
+    'bb_buying_guide': http://bg2011.ihvweb.com/bg/init/?inst_id=217&impl_id=300&locale=en_US
   qa-test:
     'BB.ca Web BG': http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=217&impl_id=300&locale=en_US #the same application in different env
     'HP Buying Guide': http://qa.hp.com/buing_guide
@@ -12,3 +13,4 @@ app_environment:
     'BB.ca Web BG': some url
     'HP Buying Guide': http://dev12.hp.com/buing_guide
     'climate' : http://localhost:3000/risk_reports
+    
