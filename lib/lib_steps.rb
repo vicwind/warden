@@ -24,3 +24,23 @@ end
 # Given /^the user has changed to the default test target environment for the test application$/ do
   # step "Change to default test target environment for the test application"
 # end
+
+
+# Commonly used steps
+
+And /^the user has clicked the "([^"]*)" button$/ do |type|
+  type_button = find_button(type)
+  type_button.click
+end
+
+And /^the user has also clicked the "([^"]*)" button$/ do |category|
+  category_button = find_button(category)
+  category_button.click
+end
+
+When /^the user has clicked the go to results button$/ do
+  results_button = find_button('Go to results')
+  results_button.click
+  # to verify that the results page has loaded before continuing
+	find_by_id('best_match')
+end
