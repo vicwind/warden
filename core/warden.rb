@@ -7,6 +7,7 @@ module Warden
   
   SCREEN_CAPTURE_DIR = "#{ENV["WARDEN_HOME"]}/screen-capture"
   APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
+  PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
 
   def load_config
       @app_domain =  APP_ENV["app_environment"][app_env]

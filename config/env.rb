@@ -5,6 +5,7 @@ require "#{File.dirname(__FILE__)}/../lib/lib_steps"
 require "#{File.dirname(__FILE__)}/../core/warden"
 require "#{File.dirname(__FILE__)}/../lib/link_checker"
 require "#{File.dirname(__FILE__)}/../lib/price_rogue"
+require "#{File.dirname(__FILE__)}/../lib/page_objects"
 
 World(Warden)
 
