@@ -22,91 +22,15 @@
 class BuyingGuidePage
   include BuyingGuideInterface
 
-  # Functions that need implementation to be a valid BuyingGuide page object
-  
-  # Tab interaction
-  #needs_implementation :tab_one_exists, :tab_one_active
-  #needs_implementation :tab_two_exists, :tab_two_active
-  #needs_implementation :tab_three_exists, :tab_three_active
-  #needs_implementation :tab_four_exists, :tab_four_active
-
   URL = "/"
   
   def initialize(page_session)
     @session = page_session
-    setup_vars
   end
 
   def visit
+    query_session_elements    
     @session.visit URL
-  end
-
-  def setup_vars
-  ########################################## 
-  # Constant BG Objects                    #
-  ########################################## 
-  
-    # These will be chosen based on their class identifiers
-  
-    # Header objects
-    @start_link        = "a.start"
-    @header_email_link = "a.email"
-    @header_print_link = "a.print"
-    
-    # These will be chosen based on their css identifiers
-    @keyword_field         = "#search_terms"
-    @keyword_search_button = "img#keyword_search_go"
-    
-    # Footer Objects
-    @legal_link = "a#legal"
-    @ihi_link   = "img#ihi"
-    
-    @ru_ref_code_field  = "input#ref_code"
-    @ru_ref_code_button = "img#ref_code_go" 
-    
-  ############################################# 
-  # BG Client Objects                         #
-  #                                           #
-  # Copy and paste these into the setup_vars  #
-  #   method and modify their values          #
-  #############################################
-  
-    # Tab Variables
-    # Example: 
-    #  Bestbuy.ca tab_one corresponds to the "Find My New PC" for a new user
-    #  Bestbuy.ca tab_two corresponds to the "Deal Zone" for a new user
-    #  Bestbuy.ca tab_three corresponds to the "Top Rated" for a new user
-    #  Bestbuy.ca tab_four corresponds to the "My Buying Guide" for a return user
-    
-    @tab_one        = "Change me"
-    @tab_two        = "Change Me"
-    @tab_three      = "Change Me"
-    @tab_four       = "Change Me"
-
-    # Tab One Objects
-    # Example:
-    # Bestbuy.ca tab_one_button_one corresponds to the Laptops button
-    # Bestbuy.ca tab_one_button_two corresponds to the Desktops button
-    # Bestbuy.ca tab_one_button_three corresponds to the Netbooks button
-    
-    @tab_one_button_one     = "Change Me"
-    @tab_one_button_two     = "Change Me"
-    @tab_one_button_three   = "Change Me"
-    
-    # tp_fp: Top Rated Featured Products
-    @top_rated_featured_product_one   = "Change Me"
-    @top_rated_featured_product_two   = "Change Me"
-    @top_rated_featured_product_three = "Change Me"
-    
-    # dz_fp: Deal Zone Featured Products
-    @dealzone_featured_product_one   = "Change Me"
-    @dealzone_featured_product_two   = "Change Me"
-    @dealzone_featured_product_three = "Change Me"
-    @dealzone_all_deals_button       = "Change Me"
-    
-  ########################################## 
-  # End of Vars to initialize              #
-  ########################################## 
   end
 
  ########################################## 
@@ -202,28 +126,73 @@ class BuyingGuidePage
 # Tab Interaction                               #
 #################################################
 
-  def find_tab_one
-    @session.find(@tab_one)
+
+  ##########################
+  # Find My New Tab        #
+  ##########################
+  def find_find_my_new_tab
+    @session.find(@find_my_new_tab)
   end
 
-  def tab_one_active?
-   return @session.has_css?("#{@tab_one}.active")
+  def find_my_new_tab_active?
+   return @session.has_css?("#{@find_my_new_tab}.active")
+  end
+
+  def click_find_my_new_tab
+    @session.find(@find_my_new_tab).click
+  end
+      
+  ########################## 
+  # Dealzone Tab           #
+  ##########################
+  def find_deal_zone_tab
+    @session.find(@deal_zone_tab)
+  end
+
+  def deal_zone_tab_active?
+   return @session.has_css?("#{@deal_zone_tab}.active")
+  end
+
+  def click_deal_zone_tab
+    @session.find(@deal_zone_tab).click
+  end
+
+  def find_dealzone_all_deals_button
+    @session.find_button(@dealzone_all_deals_button)
+  end
+
+  def click_dealzone_all_deals_button
+    @session.find_button(@dealzone_all_deals_button).click
+  end
+
+  ##########################
+  # Top Rated Tab          #
+  ##########################
+  def find_top_rated_tab
+    @session.find(@top_rated_tab)
+  end
+
+  def top_rated_tab_active?
+   return @session.has_css?("#{@top_rated_tab}.active")
+  end
+
+  def click_top_rated_tab
+    @session.find(@top_rated_tab).click
+  end
+
+  ##########################
+  # My Buying Guide Tab    #
+  ##########################
+  def find_my_buying_guide_tab
+    @session.find(@my_buying_guide_tab)
+  end
+
+  def my_buying_guide_tab_active?
+   return @session.has_css?("#{@my_buying_guide_tab}.active")
   end
   
-  def find_tab_two
-    @session.find(@tab_one)
+  def click_my_buying_guide
+    @session.find(@my_buying_guide).click
   end
-
-  def tab_two_active?
-   return @session.has_css?("#{@tab_two}.active")
-  end
-
-  def find_tab_three
-    @session.find(@tab_one)
-  end
-
-  def tab_three_active?
-   return @session.has_css?("#{@tab_three}.active")
-  end
-
+  
 end
