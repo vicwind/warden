@@ -2,10 +2,11 @@ module Warden
   require 'yaml'
   require 'capybara/cucumber'
   require 'ostruct' #provids dot access to hash value
-
+ 
   include Capybara::DSL
   
   SCREEN_CAPTURE_DIR = "#{ENV["WARDEN_HOME"]}/screen-capture"
+  SCREEN_CAPTURE_SERVER = 'http://ec2-174-129-171-140.compute-1.amazonaws.com'
   APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
   PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
 
@@ -54,7 +55,11 @@ module Warden
   class Warden_Session
     include Warden
 
+    #the key is the scenario, the value is an array of screen capture URL or fiel path
+    @@fail_scenario_screen_capture = {}
+
     def initialize( cucumber_scenario )
+
       if cucumber_scenario.class == Cucumber::Ast::OutlineTable::ExampleRow #for senario outline
         @current_scenario = cucumber_scenario
         @current_scenario_outline = cucumber_scenario.scenario_outline
@@ -87,7 +92,7 @@ module Warden
         # #contains only the file name
         # return @current_feature.file
       # end
-      @current_feature.file.split('/')[-1]
+      @current_feature.file.split('/')[-1].split('.')[0]
     end
 
 
@@ -117,20 +122,53 @@ module Warden
     #  prefix: this string will be used as prefix of the file name
     #  scenario: the cucumber scenario object
     #
+    #Return: the file name of the image capture
     def capture_screen_shot_base( scenario,  prefix = '' )
+      
       feature_name = feature_name()
 
       image_capture_file_name = "#{feature_name}-#{scenario.name.gsub(/[ \.'"\?]/,'_')}" + 
       "-#{Time.now.strftime("%m%d%Y_%H%M%S")}.jpg"
       image_capture_file_name = ( prefix != '' )? prefix + "-" + 
         image_capture_file_name : image_capture_file_name
-      #puts "image file:" + file_path
+      type = (scenario.failed?)? '[Failure]' : '[Normal]'
+
       embed_screenshot( image_capture_file_name )
+      screen_capture_base_path = ENV['WARDEN_RUN_MODE'] == "server" ?  SCREEN_CAPTURE_SERVER : SCREEN_CAPTURE_DIR
+      screen_capture_url = "#{type} screen capture is at: " + screen_capture_base_path + '/' + ENV["WARDEN_TEST_TARGET_NAME"] + '/' +
+        image_capture_file_name
+      #print FORMATS[:failed].call(screen_capture_url) if scenario.failed? 
+
+      scenario = (scenario.class == Cucumber::Ast::OutlineTable::ExampleRow)? scenario.scenario_outline : scenario
+
+      if @@fail_scenario_screen_capture.has_key?(scenario)
+        @@fail_scenario_screen_capture[scenario].push(screen_capture_url)
+      else
+        @@fail_scenario_screen_capture[scenario] = []
+        @@fail_scenario_screen_capture[scenario].push(screen_capture_url)
+      end
+
+      image_capture_file_name
     end
 
     #users should uses this methods to capture screen shot in the step definition
+    ##parameter:
+    #  prefix: this string will be used as prefix of the file name
+    ##Return: the file name of the image capture
     def capture_screen_shot( prefix = '')
       capture_screen_shot_base( @current_scenario , prefix )
+    end
+
+
+    ########################
+    ##
+    ## Class Methods
+    ##
+    ########################
+
+    #return a hash of :scenario => screen capthre path array
+    def self.get_fail_scenario_capture()
+      @@fail_scenario_screen_capture
     end
 
   end #end of warden_session class
