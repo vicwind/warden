@@ -115,11 +115,25 @@ module CucumberFormatter
 
     class Capybara::Node::Element 
       alias_method :original_click, :click
-      # alias_method :original_, :
+      alias_method :original_set, :set
 
       def click()
+        characteristic_type, characteristic_value = get_element_characteristic()
+
+        step_detail = "Click at element '#{tag_name}' with " + 
+          "#{characteristic_type}=#{characteristic_value} "
+        Warden.add_step_detail(step_detail)
+        original_click()
+      end
+
+      #get the element's charateristic like its id, name or text
+      #return the type and value when there is a charateristics that's
+      # not null or empty
+      #return: [characteristic_type, characteristic_value]
+      def get_element_characteristic()
         characteristic_type = ''
         characteristic_value = ''
+
         [:id, :name, :value].each do |identity|
           if self[identity] && self[identity] != ''
             characteristic_type = identity
@@ -131,10 +145,15 @@ module CucumberFormatter
           characteristic_type = 'text'
           characteristic_value = text()
         end
-        step_detail = "Click at element '#{tag_name}' with " + 
+        [characteristic_type, characteristic_value]
+      end
+
+      def set(value)
+        characteristic_type, characteristic_value = get_element_characteristic()
+        step_detail = "Set value '#{value}' for  element '#{tag_name}' with " + 
           "#{characteristic_type}=#{characteristic_value} "
         Warden.add_step_detail(step_detail)
-        original_click()
+        original_set(value)
       end
     end #of class Capybara::Node::Element 
 
