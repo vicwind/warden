@@ -10,6 +10,21 @@ module Warden
   APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
   PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
 
+  class << self
+    def step_detail
+      @step_detail ||= []
+    end
+
+    def add_step_detail(msg)
+      step_detail.push(msg)
+    end
+
+    def clear_step_detail()
+      @step_detail = []
+    end
+  end #of defineing metaclass 
+
+
   def load_config
       @app_domain =  APP_ENV["app_environment"][app_env]
   end
