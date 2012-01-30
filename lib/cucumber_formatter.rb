@@ -48,7 +48,7 @@ module Cucumber::Formatter::Console
 
   #print all of the screen captures url for the scenario
   def print_screen_capture_url(scenario)
-    screen_captures = Warden::Warden_Session.get_fail_scenario_capture()
+    screen_captures = Warden::Warden_Session.get_scenario_screen_capture()
     screen_captures[scenario].each do |screen_capture|
       @io.puts format_string( "  " + screen_capture, :failed) 
     end

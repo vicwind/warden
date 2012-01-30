@@ -56,7 +56,7 @@ module Warden
     include Warden
 
     #the key is the scenario, the value is an array of screen capture URL or fiel path
-    @@fail_scenario_screen_capture = {}
+    @@scenario_screen_capture = {}
 
     def initialize( cucumber_scenario )
 
@@ -141,11 +141,11 @@ module Warden
 
       scenario = (scenario.class == Cucumber::Ast::OutlineTable::ExampleRow)? scenario.scenario_outline : scenario
 
-      if @@fail_scenario_screen_capture.has_key?(scenario)
-        @@fail_scenario_screen_capture[scenario].push(screen_capture_url)
+      if @@scenario_screen_capture.has_key?(scenario)
+        @@scenario_screen_capture[scenario].push(screen_capture_url)
       else
-        @@fail_scenario_screen_capture[scenario] = []
-        @@fail_scenario_screen_capture[scenario].push(screen_capture_url)
+        @@scenario_screen_capture[scenario] = []
+        @@scenario_screen_capture[scenario].push(screen_capture_url)
       end
 
       image_capture_file_name
@@ -167,8 +167,8 @@ module Warden
     ########################
 
     #return a hash of :scenario => screen capthre path array
-    def self.get_fail_scenario_capture()
-      @@fail_scenario_screen_capture
+    def self.get_scenario_screen_capture()
+      @@scenario_screen_capture
     end
 
   end #end of warden_session class
