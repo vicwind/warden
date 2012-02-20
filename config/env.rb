@@ -1,13 +1,13 @@
 #require 'capybara/cucumber'
-require 'sauce'
 require 'ruby-debug'
-require "#{File.dirname(__FILE__)}/../lib/lib_steps"
+
 require "#{File.dirname(__FILE__)}/../core/warden"
+require "#{File.dirname(__FILE__)}/../lib/lib_steps"
 require "#{File.dirname(__FILE__)}/../lib/cucumber_formatter"
 require "#{File.dirname(__FILE__)}/../lib/link_checker"
 require "#{File.dirname(__FILE__)}/../lib/price_rogue"
 require "#{File.dirname(__FILE__)}/../lib/page_objects"
-
+require "#{File.dirname(__FILE__)}/../config/sauce_connect_config"
 World(Warden)
 
 #require './selenium_remote'
@@ -24,19 +24,11 @@ FileUtils.rm Dir.glob("#{ENV["WARDEN_HOME"]}log/*.yaml")
 
 Capybara.configure do |config|
   config.run_server = false
-  config.default_driver = :selenium
+  config.default_driver = :selenium #:sauce for Sauce Connect driver
+  #config.default_driver = :sauce #for Sauce Connect driver
   config.default_wait_time = 20 #for ajax heavy site, site it to a higher number
 end
 
-require 'sauce/capybara'
-
-Sauce.config do |config|
-  config.username = ""
-  config.access_key = ""
-  config.browser = "firefox"
-  config.os = "Windows 2003"
-  config.browser_version = "7"
-end
 
 Before do |scenario|
   #browser.open()
