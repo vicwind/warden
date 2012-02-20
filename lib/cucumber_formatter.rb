@@ -12,9 +12,13 @@ module CucumberFormatter
 
     def before_step(step)
       Warden.clear_step_detail()
+      Warden.clear_test_target_detail()
     end
 
     def after_step(step) 
+      Warden.test_target_detail().each do |detail|
+        @io.puts format_string(format_msg(detail), :tag).indent(6)
+      end
       Warden.step_detail().each do |detail|
         @io.puts format_string(format_msg(detail), :tag).indent(6)
       end
@@ -166,6 +170,7 @@ end #of module CucumberFormatter
 ## Mix-in 
 ##
 ## Reopen the cucumber console module to over write methods to support add-on features
+## for more verbose logging
 #####################################################
 module Cucumber::Formatter::Console
   def print_stats(features, options)
@@ -198,4 +203,32 @@ module Cucumber::Formatter::Console
       @io.puts format_string( "  " + screen_capture, :failed) 
     end
   end
+
 end #of Cucumber::Formatter::Console
+
+class Cucumber::Formatter::Pretty
+  alias_method :original_before_step, :before_step
+
+  def before_step(step)
+    Warden.clear_test_target_detail()
+    original_before_step(step)
+  end
+
+  def after_step(step)
+    Warden.test_target_detail().each do |detail|
+      @io.puts format_string(detail, :tag).indent(6)
+    end
+  end
+
+end #of class Cucumber::Formatter::Pretty
+
+class Capybara::Session
+  alias_method :original_visit, :visit
+
+  def visit(url)
+    step_detail = "Go to url: #{Capybara.app_host}#{url}"
+    Warden.add_step_detail(step_detail)
+    original_visit(url)
+  end
+
+end #of class Capybara::Session

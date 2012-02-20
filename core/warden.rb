@@ -17,11 +17,23 @@ module Warden
     end
 
     def add_step_detail(msg)
-      step_detail.push(msg)
+      step_detail().push(msg)
     end
 
     def clear_step_detail()
       @step_detail = []
+    end
+
+    def test_target_detail
+      @test_target_detail ||= []
+    end
+
+    def add_test_target_detail(msg)
+      test_target_detail().push(msg)
+    end
+
+    def clear_test_target_detail
+      @test_target_detail = []
     end
 
   end #of defineing metaclass 
