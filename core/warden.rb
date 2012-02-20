@@ -2,6 +2,7 @@ module Warden
   require 'yaml'
   require 'capybara/cucumber'
   require 'ostruct' #provids dot access to hash value
+  require 'i18n'
  
   include Capybara::DSL
   
@@ -22,8 +23,8 @@ module Warden
     def clear_step_detail()
       @step_detail = []
     end
-  end #of defineing metaclass 
 
+  end #of defineing metaclass 
 
   def load_config
       @app_domain =  APP_ENV["app_environment"][app_env]
@@ -39,7 +40,7 @@ module Warden
 
 
   def current_project_name
-
+    ENV["WARDEN_TEST_TARGET_NAME"]
   end
 
   def current_feature_name
@@ -66,6 +67,13 @@ module Warden
     end
   end
 
+  #Provide a convenient way to call the translation method
+  #a @warden_session is in the binding class needed in order for this methods to work
+  def _t(*args)
+    @warden_session.translate(*args)
+  end
+
+
   #used to store state during the cucumber feature execution
   class Warden_Session
     include Warden
@@ -85,6 +93,11 @@ module Warden
       end
       #this line has to be ran after @current_feature has been set properly
       @current_featuer_data = load_current_feature_data()
+
+      #load the locale dictionary from yaml
+      set_locale(ENV["WARDEN_TEST_TARGET_LOCALE"]) if ENV["WARDEN_TEST_TARGET_LOCALE"]
+      @project_local_path = "#{ENV['WARDEN_HOME']}/projects/#{ENV['WARDEN_TEST_TARGET_NAME']}/etc/locale.yml"
+      I18n.load_path << @project_local_path unless I18n.load_path.include? @project_local_path
     end
 
     attr_accessor :current_scenario, :current_feature
@@ -174,6 +187,22 @@ module Warden
       capture_screen_shot_base( @current_scenario , prefix )
     end
 
+    #I18n support for translating text. it uses the current feature name to
+    #and key/string to help locate the correct translation in the locale yml file
+    #support for all the argument of the original I18n.translate method
+    #Return: the translated string
+    def translate(*args)
+      scope = feature_name().split('.')[0]
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      look_up_name = args.shift.to_s
+      I18n.translate("#{scope}.#{look_up_name.to_s}", options)
+    end
+
+
+    #set the locale of I18n translation
+    def set_locale(locale)
+      I18n.locale = locale
+    end
 
     ########################
     ##
