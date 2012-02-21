@@ -1,15 +1,30 @@
 When /^Change test target environment to "(.*)" for "(.*)" application$/ do |app_env, app_name|
   Capybara.app_host = Warden::APP_ENV[app_env][app_name]
+  step_detail = "Target environment '#{app_env}', " +
+    "test application '#{app_name}'"
+  step_detail += " with locale '#{ENV["WARDEN_TEST_TARGET_LOCALE"]}'" if ENV["WARDEN_TEST_TARGET_LOCALE"]
+
+  Warden.add_test_target_detail(step_detail)
   visit("/")
 end
 
 When /^Change to default test target environment for "(.*)" application$/ do |app_name|
   Capybara.app_host = Warden::APP_ENV[ ENV[ "WARDEN_TEST_TARGET_ENV" ] ][ app_name ]
+  step_detail = "Target environment '#{ENV[ "WARDEN_TEST_TARGET_ENV" ] }', " +
+    "test application '#{app_name}'"
+  step_detail += " with locale '#{ENV["WARDEN_TEST_TARGET_LOCALE"]}'" if ENV["WARDEN_TEST_TARGET_LOCALE"]
+
+  Warden.add_test_target_detail(step_detail)
   visit("/")
 end
 
 When /^Change to default test target environment for the test application$/ do
   Capybara.app_host = Warden::APP_ENV[ ENV[ "WARDEN_TEST_TARGET_ENV" ] ][ ENV["WARDEN_TEST_TARGET_NAME"] ]
+  step_detail = "Target environment '#{ENV[ "WARDEN_TEST_TARGET_ENV" ] }', " +
+    "test application '#{ENV["WARDEN_TEST_TARGET_NAME"] }'"
+  step_detail += " with locale '#{ENV["WARDEN_TEST_TARGET_LOCALE"]}'" if ENV["WARDEN_TEST_TARGET_LOCALE"]
+
+  Warden.add_test_target_detail(step_detail)
   visit("/")
 end
 
@@ -28,7 +43,13 @@ end
 Given /^user is using page objects to access the default test target environment for the test application$/ do
   Capybara.app_host = Warden::APP_ENV[ ENV[ "WARDEN_TEST_TARGET_ENV" ] ][ ENV["WARDEN_TEST_TARGET_NAME"] ]
   page_name = ENV[ "WARDEN_TEST_TARGET_NAME" ]
+
   page_class = Object.const_get("#{ Warden::PAGE_OBJECTS[page_name] }")
+  step_detail = "Target environment '#{ENV[ "WARDEN_TEST_TARGET_ENV" ] }' ,"+
+    "test application '#{ENV["WARDEN_TEST_TARGET_NAME"] }'"
+  step_detail += " with locale '#{ENV["WARDEN_TEST_TARGET_LOCALE"]}'" if ENV["WARDEN_TEST_TARGET_LOCALE"]
+
+  Warden.add_test_target_detail(step_detail)
   @page = page_class.new(Capybara.current_session)
   @page.visit
 end
