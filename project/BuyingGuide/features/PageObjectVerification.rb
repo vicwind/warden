@@ -16,17 +16,26 @@ end
 
 Then /^ensure that pageobject Find My New tab exists and is active$/ do
   @page.find_find_my_new_tab
-  ( @page.find_my_new_tab_active? ).should == true
+  
+  if (@page.find_my_new_tab_active? != nil )
+    ( @page.find_my_new_tab_active? ).should == true
+  end
 end
 
 Then /^ensure that pageobject Dealzone tab exists and not active$/ do
   @page.find_deal_zone_tab
-  ( @page.deal_zone_tab_active? ).should == false
+  
+  if (@page.deal_zone_tab_active? != nil )
+    ( @page.deal_zone_tab_active? ).should == false
+  end
 end
 
 Then /^ensure that pageobject Top Rated exists and not active$/ do
   @page.find_top_rated_tab
-  ( @page.top_rated_tab_active? ).should == false
+  
+  if (@page.top_rated_tab_active? != nil )
+    ( @page.top_rated_tab_active? ).should == false
+  end
 end
 
 When /^the user clicks on the deal zone tab$/ do

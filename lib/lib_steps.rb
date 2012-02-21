@@ -35,19 +35,38 @@ end
 
 # Commonly used steps
 
-And /^the user has clicked the "([^"]*)" button$/ do |type|
-  type_button = find_button(type)
-  type_button.click
+And /^the user clicked the "([^"]*)" button$/ do |type|
+  case(type)
+  when "@type_button_one"
+    @page.click_type_button_one
+  when "@type_button_two"
+    @page.click_type_button_two
+  when "@type_button_three" 
+    @page.click_type_button_three
+  end  
 end
 
-And /^the user has also clicked the "([^"]*)" button$/ do |category|
-  category_button = find_button(category)
-  category_button.click
+When /^the user clicked the category "([^"]*)" button$/ do |category|
+  case(category)
+  when "@category_button_one"
+    @page.click_category_button_one
+  when "@category_button_two"
+    @page.click_category_button_two
+  when "@category_button_three"  
+    @page.click_category_button_three  
+  when "@category_browse_button_one"
+    @page.click_category_browse_button_one
+  when "@category_browse_button_two"
+    @page.click_category_browse_button_two
+  when "@category_browse_button_three"
+    @page.click_category_browse_button_three
+  end
 end
 
 When /^the user has clicked the go to results button$/ do
-  results_button = find_button('Go to results')
-  results_button.click
-  # to verify that the results page has loaded before continuing
-	find_by_id('best_match')
+  @page.click_go_to_results_button
+end
+
+When /^the user clicked the Start button$/ do
+  @page.click_start_link
 end

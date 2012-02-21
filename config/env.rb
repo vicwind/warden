@@ -21,10 +21,16 @@ Debugger.settings[:autolist] = 0
 # sophisticated.
 FileUtils.rm Dir.glob("#{ENV["WARDEN_HOME"]}log/*.yaml")
 
+#Capybara.register_driver :chrome do |app|
+#  Capybara::Selenium::Driver.new(app, :browser => :chrome)  
+#end
+
+#Capybara.javascript_driver = :chrome
+
 Capybara.configure do |config|
   config.run_server = false
   config.default_driver = :selenium
-  config.default_wait_time = 20 #for ajax heavy site, site it to a higher number
+  config.default_wait_time = 30 #for ajax heavy site, site it to a higher number
 end
 
 require 'sauce/capybara'
