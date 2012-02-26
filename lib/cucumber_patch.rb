@@ -37,13 +37,13 @@ module Cucumber
         cli_arg_feature_files = original_feature_files()
         pkg_features_list = pkg_feature_files([@pkg_feature_path])
         if paths().size == 1 and (paths.include?("features") or
-                                  paths.include?("./features")) #when user don't spcified a list of features
-                                  cli_arg_feature_files.reject! do |file|
-                                    #filter out the pkg feature files
-                                    pkg_features_list.delete(get_feature_file_path(file).sub(/:.*/,''))
-                                  end
-                                  pkg_features_list.map{ |f| @pkg_setup_info += "Using feature file from pkg: #{f}\n"}
-                                  cli_arg_feature_files + pkg_features_list
+                                  paths.include?("./features/")) #when user don't spcified a list of features
+          cli_arg_feature_files.reject! do |file|
+            #filter out the pkg feature files
+            pkg_features_list.delete(get_feature_file_path(file).sub(/:.*/,''))
+          end
+          pkg_features_list.map{ |f| @pkg_setup_info += "Using feature file from pkg: #{f}\n"}
+          cli_arg_feature_files + pkg_features_list
         else #when uses specified a list of files
           cli_arg_feature_files.map do |file|
             #filter out the pkg feature files
