@@ -1,12 +1,14 @@
 #require 'capybara/cucumber'
 require 'sauce'
 require 'ruby-debug'
-require "#{File.dirname(__FILE__)}/../lib/lib_steps"
+
 require "#{File.dirname(__FILE__)}/../core/warden"
+require "#{File.dirname(__FILE__)}/../lib/lib_steps"
 require "#{File.dirname(__FILE__)}/../lib/link_checker"
 require "#{File.dirname(__FILE__)}/../lib/price_rogue"
 require "#{File.dirname(__FILE__)}/../lib/page_objects"
-
+require "#{File.dirname(__FILE__)}/../lib/gerbil"
+require "#{File.dirname(__FILE__)}/../config/sauce_connect_config"
 World(Warden)
 
 #require './selenium_remote'
@@ -53,7 +55,7 @@ end
 After do |scenario|
   begin
     @warden_session.capture_screen_shot()# if scenario.failed?
-    
+
     if scenario.failed? and ENV["WARDEN_DEBUG_MODE"] == "true"
       print "\nYou are in ruby debug mode.\n"
       print scenario.exception.message + "\n"
@@ -75,6 +77,19 @@ After do |scenario|
   end
 
 end
+
+#setup configuration hook for loading feature and steps pkg from a different location
+AfterConfiguration do |config|
+  if ENV["WARDEN_PKG_FEATURES_LIB_PATH"] and ENV["WARDEN_PKG_FEATURES_LIB_PATH"] != ''
+    require "#{File.dirname(__FILE__)}/../lib/cucumber_patch"
+    pkg_manager = Gerbil.new()
+    tmp_pkg_path = pkg_manager.gerbilnate(ENV["WARDEN_PKG_FEATURES_LIB_PATH"],
+                                          Warden::project_path())
+    config.pkg_step_and_lib_files(tmp_pkg_path)
+    puts config.get_pkg_setup_info()
+  end
+end
+
 
 # AfterStep do |scenario|
   

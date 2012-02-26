@@ -85,6 +85,15 @@ module Warden
     @warden_session.translate(*args)
   end
 
+  #####################
+  ##Warden class method
+  #####################
+  #
+  #return the absolute path to the current project
+  def self.project_path
+    "#{ENV['WARDEN_HOME']}/projects/#{ENV['WARDEN_TEST_TARGET_NAME']}"
+  end
+
 
   #used to store state during the cucumber feature execution
   class Warden_Session
@@ -108,7 +117,7 @@ module Warden
 
       #load the locale dictionary from yaml
       set_locale(ENV["WARDEN_TEST_TARGET_LOCALE"]) if ENV["WARDEN_TEST_TARGET_LOCALE"]
-      @project_local_path = "#{ENV['WARDEN_HOME']}/projects/#{ENV['WARDEN_TEST_TARGET_NAME']}/etc/locale.yml"
+      @project_local_path = project_path() + "/etc/locale.yml"
       I18n.load_path << @project_local_path unless I18n.load_path.include? @project_local_path
     end
 
@@ -216,6 +225,11 @@ module Warden
       I18n.locale = locale
     end
 
+    #call Warden's project_path class methods
+    def project_path
+      Warden::project_path()
+    end
+
     ########################
     ##
     ## Class Methods
@@ -223,7 +237,7 @@ module Warden
     ########################
 
     #return a hash of :scenario => screen capthre path array
-    def self.get_scenario_screen_capture()
+    def self.get_scenario_screen_capture
       @@scenario_screen_capture
     end
 

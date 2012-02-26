@@ -5,4 +5,3 @@ page_objects:
   'Dell BG' : DellPage
   'ATT Web BG' : ATTPage
   'OfficeMax BG' : OfficeMaxPage
-  
