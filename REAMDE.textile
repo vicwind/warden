@@ -1,0 +1,4 @@
+h3. Warden Architecture
+
+!https://github.com/vicwind/warden/raw/master/etc/warden_architecture.jpg!:https://github.com/vicwind/warden
+
