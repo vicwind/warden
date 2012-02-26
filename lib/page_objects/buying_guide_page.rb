@@ -20,12 +20,35 @@
 #################################################################################################
 
 class BuyingGuidePage
+
+  attr_accessor :session
+  
   include BuyingGuideInterface
+
+  ################################################# 
+  # Tabs                                          #
+  #################################################
+    include FindMyNewTab
+    include DealZoneTab
+    include TopRatedTab
+    include MyBuyingGuideTab     
+    include TabInteractions
+    
+  ################################################# 
+  # Features                                      #
+  #################################################
+    include BGSearch
+    include BGCompare
+    include BGFavorites
+    include BGResults
 
   URL = "/"
   
   def initialize(page_session)
     @session = page_session
+    
+    #Link Checking helper class
+    @link_checker = LinkChecker.new
   end
 
   def visit
@@ -33,8 +56,13 @@ class BuyingGuidePage
     @session.visit URL
   end
 
+  def click_close_button
+    close_button = @session.find(:css,"div.close")
+    close_button.click
+  end
+
  ########################################## 
- # Link capabilities of the BG platform   #
+ # Universal Links                        #
  ########################################## 
   
   # Links Exist
@@ -74,125 +102,42 @@ class BuyingGuidePage
    link = @session.find( @ihi_link )
    link.click
   end
-
-########################################## 
-# Search capabilities of the BG platform #
-########################################## 
- def find_search_field
-    @session.find( @keyword_field )
- end
- 
- ##################
- # Keyword Search #
- ##################
- 
- # User enters keyword search parameters
- def enter_keywords( input )
-   @session.fill_in( @keyword_field,:with => input )
- end  
-   
- # User clicks keyword search button
- def click_keyword_search()
-   @session.find( @keyword_search_button ).click
- end
- 
- ##################
- # Refcode search #
- ##################
- 
- # User enters reference code
- def enter_reference_code( input )
-    @session.fill_in( @ru_ref_code_field,:with => input )
- end  
- 
- # User clicks reference code search button
- def click_reference_code_search
-   @session.find( @ru_ref_code_button ).click
- end
-
+  
 ############################################# 
-# Favorites capabilities of the BG platform #
+# Universal Buttons                         #
 ############################################# 
 
-  # User expands Favorites section
-
-################################################# 
-# Recent Search capabilities of the BG platform #
-#################################################
-
-  # User expands Recent Searches section
-
-################################################# 
-# Tab Interaction                               #
-#################################################
-
-
-  ##########################
-  # Find My New Tab        #
-  ##########################
-  def find_find_my_new_tab
-    @session.find(@find_my_new_tab)
+  def find_start_new_search_on_my_buying_guide_page
+    @session.find(:css,"#start_new_search")
   end
 
-  def find_my_new_tab_active?
-   return @session.has_css?("#{@find_my_new_tab}.active")
+  def click_start_new_search_on_my_buying_guide
+    @session.find(:css,"#start_new_search").click
   end
 
-  def click_find_my_new_tab
-    @session.find(@find_my_new_tab).click
-  end
-      
-  ########################## 
-  # Dealzone Tab           #
-  ##########################
-  def find_deal_zone_tab
-    @session.find(@deal_zone_tab)
+  def click_go_to_results
+    wait_for_loading
+    @session.find(:css,"button.question_nav.go_to_results").click
   end
 
-  def deal_zone_tab_active?
-   return @session.has_css?("#{@deal_zone_tab}.active")
+  def click_start_new_search_from_buying_guide
+    @session.find(:css,".start_new_search").click
   end
 
-  def click_deal_zone_tab
-    @session.find(@deal_zone_tab).click
-  end
-
-  def find_dealzone_all_deals_button
-    @session.find_button(@dealzone_all_deals_button)
-  end
-
-  def click_dealzone_all_deals_button
-    @session.find_button(@dealzone_all_deals_button).click
-  end
-
-  ##########################
-  # Top Rated Tab          #
-  ##########################
-  def find_top_rated_tab
-    @session.find(@top_rated_tab)
-  end
-
-  def top_rated_tab_active?
-   return @session.has_css?("#{@top_rated_tab}.active")
-  end
-
-  def click_top_rated_tab
-    @session.find(@top_rated_tab).click
-  end
-
-  ##########################
-  # My Buying Guide Tab    #
-  ##########################
-  def find_my_buying_guide_tab
-    @session.find(@my_buying_guide_tab)
-  end
-
-  def my_buying_guide_tab_active?
-   return @session.has_css?("#{@my_buying_guide_tab}.active")
+  def find_back_button
+    @session.find(:css,".back.generic_nav")
   end
   
-  def click_my_buying_guide
-    @session.find(@my_buying_guide).click
+  def find_product_details_button
+    @session.find(:css,".feature.product .view_details")
+  end
+  
+  def wait_for_loading
+    loader = @session.find(:css,"#loader").native 
+    @session.wait_until {
+      ( loader["style"].include?("display: none;") ||
+        ! loader["style"].include?("display: block;") )
+    }
   end
   
 end

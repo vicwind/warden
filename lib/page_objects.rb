@@ -1,6 +1,54 @@
-# This is just a helper file so that the env.rb doesn't get cluttered with require statements
-# TODO: This should be more dynamic and only load the necessariy page objects depending upon the project
+##########################################################
+# Page Objects                                           #
+#                                                        #
+# Purpose:  This file is used to keep the env.rb file    #
+#           clean from too many require statments.       #
+#           Below you will find the files that make up   #
+#           a valid page object. 
+#                                                        #
+##########################################################
 
-require "#{File.dirname(__FILE__)}/page_objects/buying_guide_interface"
-require "#{File.dirname(__FILE__)}/page_objects/buying_guide_page"
-require "#{File.dirname(__FILE__)}/page_objects/best_buy_canada_page"
+
+#########################################
+#  Do NOT modify these                  #
+#########################################
+
+  ##########################
+  # Buying Guide Tab files #
+  ##########################
+  
+  require "#{File.dirname(__FILE__)}/page_objects/tabs/find_my_new_tab"
+  require "#{File.dirname(__FILE__)}/page_objects/tabs/deal_zone_tab"
+  require "#{File.dirname(__FILE__)}/page_objects/tabs/top_rated_tab"
+  require "#{File.dirname(__FILE__)}/page_objects/tabs/my_buying_guide_tab"
+  require "#{File.dirname(__FILE__)}/page_objects/tabs/tab_interactions"
+
+  #############################
+  # Buying Guide Capabilities #
+  #############################
+  
+  require "#{File.dirname(__FILE__)}/page_objects/features/bg_compare"  
+  require "#{File.dirname(__FILE__)}/page_objects/features/bg_favorites"
+  require "#{File.dirname(__FILE__)}/page_objects/features/bg_results"
+  require "#{File.dirname(__FILE__)}/page_objects/features/bg_search"
+  
+  #########################################
+  # Buying Guide required files           #
+  #########################################
+
+  require "#{File.dirname(__FILE__)}/page_objects/buying_guide_interface"
+  require "#{File.dirname(__FILE__)}/page_objects/buying_guide_page"  
+
+#########################################
+#  Include custom instances             # 
+#  here.                                #
+#########################################
+
+  #########################################
+  # Buying Guide instanace files          #
+  #########################################
+  
+  require "#{File.dirname(__FILE__)}/page_objects/instances/best_buy_canada_page"
+  require "#{File.dirname(__FILE__)}/page_objects/instances/toshiba_page"
+  require "#{File.dirname(__FILE__)}/page_objects/instances/dell_page"
+  require "#{File.dirname(__FILE__)}/page_objects/instances/att_page"

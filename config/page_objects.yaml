@@ -1,4 +1,8 @@
 ---
 page_objects:
   'BB.ca Web BG': BestBuyCanadaPage
+  'Toshiba Laptops EN BG': ToshibaLaptopsPage
+  'Dell BG' : DellPage
+  'ATT Web BG' : ATTPage
+  'OfficeMax BG' : OfficeMaxPage
   
