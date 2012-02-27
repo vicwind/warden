@@ -30,7 +30,7 @@ export WARDEN_CONFIG_DIR=$WARDEN_HOME/config
 * Create a scaffolding of the new project 
 
 ```console
-bash <warden root>/create_project.sh amazon_search_test
+bash <warden root>/bin/create_project.sh amazon_search_test
 ```
 
 * It will create a project skeletons like the following in the created project directory
