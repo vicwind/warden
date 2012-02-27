@@ -216,6 +216,11 @@ module Warden
       scope = feature_name().split('.')[0]
       options = args.last.is_a?(Hash) ? args.pop : {}
       look_up_name = args.shift.to_s
+      if is_global = look_up_name.match(/^\$(.*)/)
+        scope = '_GLOBAL_'
+        look_up_name = is_global[1] #get the string after the "$"
+      end
+
       I18n.translate("#{scope}.#{look_up_name.to_s}", options)
     end
 
