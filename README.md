@@ -77,7 +77,7 @@ Feature:
 * Cucumber will take you that you have undefined steps. create an new step files `<project root>/features/test_search_steps.rb`
 * Copy the Cucumber suggested steps definition to the file
 
-```cucumber
+```ruby
 When /^the user type "([^"]*)" in the search bar and click "([^"]*)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
 end
@@ -91,7 +91,7 @@ end
 
 * Let's implement the steps using Capybara's [API](http://rubydoc.info/github/jnicklas/capybara) and look at its [Github page](https://github.com/jnicklas/capybara) for help. (you can just copy/paste as i have done the hard work for you already :) )
 
-```cucumber
+```ruby
 When /^the user type "([^"]*)" in the search bar and click "([^"]*)"$/ do |arg1, arg2|
   fill_in 'twotabsearchtextbox', :with=> arg1
   click_button arg2
