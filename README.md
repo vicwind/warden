@@ -10,6 +10,7 @@ Still in its early stage, only the core framework and the support to run test on
 ## Requirement and Setup
 
 Warden is developed on Mac OS 10.6.8 using ruby 1.9.2p290, cucumber (1.1.4), capybara (1.1.2) and rspec (2.7.0). It should be able to run on other Linux/Unix platforms without problems(the headache is more on getting Firefox or Google Chrome installed working).
+
 * Install Ruby 1.9.2 through [RVM](http://beginrescueend.com/rvm/install/).
 * Install Bundler `gem install bundler`, and install all the require gems by doing `bundle install`
 * Setup WARDEN_CONFIG_DIR & WARDEN_HOME environment variables in the `<warden dir>/.rvmrc` file to point the project root dir and it’s config dir
@@ -21,9 +22,9 @@ export WARDEN_CONFIG_DIR=$WARDEN_HOME/config
 ```
 
 * Test run your setup:
-** try to run Cucumber
+  * try to run Cucumber
 `cucumber project/test_project/features/buying_guide.feature`
-** if the feature ran and you see a Firefox browser pop-up, Cheers! your setup is successful, we can start our journey of developing test features!
+  * if the feature ran and you see a Firefox browser pop-up, Cheers! your setup is successful, we can start our journey of developing test features!
 
 ## Create a New Test Project (Amazon Book Search)
 * Create a scaffolding of the new project 
