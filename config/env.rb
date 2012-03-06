@@ -85,6 +85,8 @@ AfterConfiguration do |config|
     pkg_manager = Gerbil.new()
     tmp_pkg_path = pkg_manager.gerbilnate(ENV["WARDEN_PKG_FEATURES_LIB_PATH"],
                                           Warden::project_path())
+    ENV['WARDEN_PKG_FEATURES_TEMP_PATH'] = tmp_pkg_path #temporary path Gerbil extracted
+                                                      #the files to
     config.pkg_step_and_lib_files(tmp_pkg_path)
     puts config.get_pkg_setup_info()
   end

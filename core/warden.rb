@@ -115,13 +115,19 @@ module Warden
       #this line has to be ran after @current_feature has been set properly
       @current_featuer_data = load_current_feature_data()
 
+      #load the pkg's locale dictionary yaml if the projct uses a pkg features and there is a
+      #./etc/locale.yml file
+      add_i18n_dictionary(ENV['WARDEN_PKG_FEATURES_TEMP_PATH'] +
+                          "/etc/locale.yml") if ENV['WARDEN_PKG_FEATURES_TEMP_PATH']
       #load the locale dictionary from yaml
-      set_locale(ENV["WARDEN_TEST_TARGET_LOCALE"]) if ENV["WARDEN_TEST_TARGET_LOCALE"]
       @project_local_path = project_path() + "/etc/locale.yml"
-      I18n.load_path << @project_local_path unless I18n.load_path.include? @project_local_path
+      add_i18n_dictionary(@project_local_path)
+
+      set_locale(ENV["WARDEN_TEST_TARGET_LOCALE"]) if ENV["WARDEN_TEST_TARGET_LOCALE"]
     end
 
     attr_accessor :current_scenario, :current_feature
+
 
     def scenario_name
       #use secenario outline's name if the current senario
@@ -228,6 +234,13 @@ module Warden
     #set the locale of I18n translation
     def set_locale(locale)
       I18n.locale = locale
+    end
+
+    #Add to the i18n load path only when the files exists and its not already int the path
+    #Return: None
+    def add_i18n_dictionary(yml_path)
+      I18n.load_path << yml_path if !I18n.load_path.include? yml_path and
+        File.exists?(yml_path)
     end
 
     #call Warden's project_path class methods
