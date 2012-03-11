@@ -37,7 +37,8 @@ module Cucumber
         cli_arg_feature_files = original_feature_files()
         pkg_features_list = pkg_feature_files([@pkg_feature_path])
         if paths().size == 1 and (paths.include?("features") or
-                                  paths.include?("./features/")) #when user don't spcified a list of features
+                                  paths.find{ |path| path.match(/.*\/features[\/]*$/)}) #when user don't spcified a list of features
+                                                                        #files but a features directory
           cli_arg_feature_files.reject! do |file|
             #filter out the pkg feature files
             pkg_features_list.delete(get_feature_file_path(file).sub(/:.*/,''))
