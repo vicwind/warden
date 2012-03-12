@@ -37,6 +37,8 @@ module Cucumber
         cli_arg_feature_files = original_feature_files()
         pkg_features_list = pkg_feature_files([@pkg_feature_path])
         if paths().size == 1 and (paths.include?("features") or
+                                  paths.find{ |path| File.exist? path + '/features/project_init.rb'}  or #the path is the root of a
+                                                                    #Warden project dir
                                   paths.find{ |path| path.match(/.*\/features[\/]*$/)}) #when user don't spcified a list of features
                                                                         #files but a features directory
           cli_arg_feature_files.reject! do |file|
