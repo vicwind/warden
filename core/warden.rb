@@ -148,7 +148,11 @@ module Warden
       set_locale(ENV["WARDEN_TEST_TARGET_LOCALE"]) if ENV["WARDEN_TEST_TARGET_LOCALE"]
 
       #register the scenario to test case manager
-      Warden.test_case_manager.register_scenario(current_project_name, @current_scenario)
+      if ENV['WARDEN_ENABLE_TEST_CASE_REGISTRATION'] and
+        ENV['WARDEN_ENABLE_TEST_CASE_REGISTRATION'] == "1"
+        Warden.test_case_manager.
+          register_scenario(current_project_name, @current_scenario)
+      end
     end
 
     attr_accessor :current_scenario, :current_feature

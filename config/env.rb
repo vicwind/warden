@@ -26,6 +26,9 @@ Debugger.settings[:autolist] = 0
 # sophisticated.
 FileUtils.rm Dir.glob("#{ENV["WARDEN_HOME"]}log/*.yaml")
 
+#Uses test case manager to register scenarios
+ENV['WARDEN_ENABLE_TEST_CASE_REGISTRATION'] = "1"
+
 # Capybara.register_driver :chrome do |app|
 #   Capybara::Selenium::Driver.new(app, :browser => :chrome)
 # end
