@@ -1,4 +1,7 @@
 #require 'capybara/cucumber'
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../core"
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+
 require 'sauce'
 require 'ruby-debug'
 
@@ -23,9 +26,9 @@ Debugger.settings[:autolist] = 0
 # sophisticated.
 FileUtils.rm Dir.glob("#{ENV["WARDEN_HOME"]}log/*.yaml")
 
-#Capybara.register_driver :chrome do |app|
-#  Capybara::Selenium::Driver.new(app, :browser => :chrome)  
-#end
+# Capybara.register_driver :chrome do |app|
+#   Capybara::Selenium::Driver.new(app, :browser => :chrome)
+# end
 
 #Capybara.javascript_driver = :chrome
 
@@ -92,9 +95,15 @@ AfterConfiguration do |config|
   end
 end
 
+at_exit do
+  # puts Warden.test_case_manager().find_all_features_by_project('BB.ca Web BG').to_yaml
+  # puts Warden.test_case_manager().find_all_scenarios_by_feature('BB.ca Web BG',
+  #
+  #puts  Warden.test_case_manager().tc_id_to_run_path(24)
+  #puts  Warden.test_case_manager().tc_id_to_run_path(1)
+end
 
 # AfterStep do |scenario|
-  
 
 # end
 

@@ -4,7 +4,7 @@ if [ "$1" == "" ];then
 	exit 1
 fi
 
-project_path=$WARDEN_HOME/project/$1
+project_path=$WARDEN_HOME/projects/$1
 
 echo "Creating project $1 at $project_path ..."
 

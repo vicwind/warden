@@ -3,9 +3,10 @@ module Warden
   require 'capybara/cucumber'
   require 'ostruct' #provids dot access to hash value
   require 'i18n'
- 
+  require 'test_case_manager'
+
   include Capybara::DSL
-  
+
   SCREEN_CAPTURE_DIR = "#{ENV["WARDEN_HOME"]}/screen-capture"
   SCREEN_CAPTURE_SERVER = 'http://ec2-174-129-171-140.compute-1.amazonaws.com'
   APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
@@ -36,7 +37,12 @@ module Warden
       @test_target_detail = []
     end
 
-  end #of defineing metaclass 
+    def test_case_manager
+      YAMLStoreTestCaseManager.create_new_test_case_map unless
+        File.exists? YAMLStoreTestCaseManager.test_case_map_path
+      @test_case_manager ||= YAMLStoreTestCaseManager.new()
+    end
+  end #of defineing metaclass
 
   def load_config
       @app_domain =  APP_ENV["app_environment"][app_env]
@@ -49,7 +55,6 @@ module Warden
   def set_e(val)
     @e = val
   end
-
 
   def current_project_name
     ENV["WARDEN_TEST_TARGET_NAME"]
@@ -89,12 +94,29 @@ module Warden
   ##Warden class method
   #####################
   #
+  #It will return the project path base on ENV['WARDEN_PROJECT_PATH'] if it exists,
+  #otherwise it will return the project path base on ENV['WARDEN_TEST_TARGET_NAME']
   #return the absolute path to the current project
   def self.project_path
-    "#{ENV['WARDEN_HOME']}/projects/#{ENV['WARDEN_TEST_TARGET_NAME']}"
+    project_path = "#{Warden::projects_root_path()}/#{ENV['WARDEN_PROJECT_DIR_NAME']}"
+    if ENV["WARDEN_PROJECT_DIR_NAME"] and Dir.exists? project_path
+      ENV["WARDEN_PROJECT_PATH"]
+    else
+      "#{Warden::projects_root_path()}/#{ENV['WARDEN_TEST_TARGET_NAME']}"
+    end
+  end
+
+  #return the root path of the projects directory
+  def self.projects_root_path
+    "#{ENV['WARDEN_HOME']}/projects"
   end
 
 
+  #####################
+  ##
+  ## Warden_Session Class
+  ##
+  #####################
   #used to store state during the cucumber feature execution
   class Warden_Session
     include Warden
@@ -124,6 +146,9 @@ module Warden
       add_i18n_dictionary(@project_local_path)
 
       set_locale(ENV["WARDEN_TEST_TARGET_LOCALE"]) if ENV["WARDEN_TEST_TARGET_LOCALE"]
+
+      #register the scenario to test case manager
+      Warden.test_case_manager.register_scenario(current_project_name, @current_scenario)
     end
 
     attr_accessor :current_scenario, :current_feature
@@ -179,7 +204,7 @@ module Warden
     #
     #Return: the file name of the image capture
     def capture_screen_shot_base( scenario,  prefix = '' )
-      
+
       feature_name = feature_name()
 
       image_capture_file_name = "#{feature_name}-#{scenario.name.gsub(/[ \.'"\?]/,'_')}" + 
