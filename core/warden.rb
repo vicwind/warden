@@ -100,7 +100,7 @@ module Warden
   def self.project_path
     project_path = "#{Warden::projects_root_path()}/#{ENV['WARDEN_PROJECT_DIR_NAME']}"
     if ENV["WARDEN_PROJECT_DIR_NAME"] and Dir.exists? project_path
-      ENV["WARDEN_PROJECT_PATH"]
+      ENV["WARDEN_PROJECT_DIR_NAME"]
     else
       "#{Warden::projects_root_path()}/#{ENV['WARDEN_TEST_TARGET_NAME']}"
     end
