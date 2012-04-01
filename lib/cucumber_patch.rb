@@ -58,6 +58,9 @@ module Cucumber
 
       end
 
+      #Params:
+      #  feature_file: string, the path of the feature file, it can contains line number
+      #     e.g. my_google_serach.feature:100
       #Return the correct feature file path for the requested feature file
       #feature file can come from two places: 1. the pkg lib location, 2.the
       #current project's feature directory.
@@ -70,7 +73,8 @@ module Cucumber
         else
           pkg_location_path =  feature_file.sub(/.*\//, @pkg_feature_path + "/")
         end
-        File.file?(feature_file) ? feature_file : pkg_location_path
+        feature_file_without_line_number = feature_file.split(":").first
+        File.file?(feature_file_without_line_number) ? feature_file : pkg_location_path
       end
 
       #This methods can be called in the AfterConfiguration hook
