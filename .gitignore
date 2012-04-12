@@ -1,5 +1,13 @@
 screen-capture/*
 projects/
+project/
+config/app_env.yaml
+config/page_object.yaml
+lib/page_objects/*
+etc/test_case_map.yml*
+log/*
+tmp/*
+.DS_Store
 ./.rvmrc
 .rvmrc
 .feature
