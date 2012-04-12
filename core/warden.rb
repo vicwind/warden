@@ -8,7 +8,7 @@ module Warden
   include Capybara::DSL
 
   SCREEN_CAPTURE_DIR = "#{ENV["WARDEN_HOME"]}/screen-capture"
-  SCREEN_CAPTURE_SERVER = 'http://ec2-174-129-171-140.compute-1.amazonaws.com'
+  SCREEN_CAPTURE_SERVER = 'http://screen_capture_server.com/'
   APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
   PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
 
