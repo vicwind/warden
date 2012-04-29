@@ -33,7 +33,6 @@ class TestRunJob < ActiveRecord::Base
   end
 
   def worker_run_job_by_id(cmd)
-    cmd = "sleep 3"
     self.queue_name = self.class.get_queue_name()
     self.run_node = `hostname -f` #get the name from shell
     self.status = "Running"
