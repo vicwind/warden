@@ -1,0 +1,39 @@
+!!! 5
+:css
+  #warden_main{
+    margin-top: 50px;
+  }
+%html
+  %head
+    %title WardenWeb
+    = stylesheet_link_tag    "application", :media => "all"
+    = stylesheet_link_tag    "/extjs-4.0.7/resources/css/ext-all", :media => "all"
+    = javascript_include_tag "/extjs-4.0.7/ext-debug"
+    = javascript_include_tag "application"
+
+    = csrf_meta_tags
+%body
+  %header.navbar.navbar-fixed-top
+    .navbar-inner
+      .container
+        %a#logo(href="/") Warden Web
+        %nav
+          %ul.nav.pull-right
+            %li{:class => ("active" if request.path_info == "/" )}
+              %a(href="/") Home
+            %li{:class => ("active" if request.path_info == "/test_case/index" )}
+              %a(href="/test_case/index") Schedule Run
+            %li{:class => ("active" if request.path_info == "/test_run_job/index" )}
+              %a(href="/test_run_job/index") Job Status
+            %li{:class => ("active" if request.path_info == "" )}
+              %a(href="#") Run Report
+            %li{:class => ("active" if request.path_info == "" )}
+              %a(href="/test_case/trend") Run Result Trend
+            %li{:class => ("active" if request.path_info == "/resque" )}
+              %a(href="/resque" target="_") Resque Console
+
+
+  #warden_main.container
+    = yield
+
+

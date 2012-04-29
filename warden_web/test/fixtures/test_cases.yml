@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  feature_name: MyString
+  feature_file_path: MyString
+  last_run_at: 2012-04-15 22:55:16
+  registered_at: 2012-04-15 22:55:16
+  tc_id: 1
+
+two:
+  name: MyString
+  feature_name: MyString
+  feature_file_path: MyString
+  last_run_at: 2012-04-15 22:55:16
+  registered_at: 2012-04-15 22:55:16
+  tc_id: 1

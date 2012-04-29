@@ -1,0 +1,113 @@
+/* Header stuffs */
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.5em;
+  color: #fff;
+  letter-spacing: -1px;
+  padding-top: 9px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.page-header {
+  padding-bottom: 10px;
+}
+
+#logo:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.output_table td {
+  padding-left: 10px;
+  padidng-right:10px;
+}
+
+.center, th.center, td.center {
+  text-align: center;
+}
+
+#status-chart {
+  border: 1px solid #cfcfcf;
+  padding-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+  width: 800px !important;
+  height: 400px !important;
+}
+
+#tabs {
+  width: 800px !important;
+  height: 500px !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Table specifics */
+
+#scenarios tr.failed td, 
+#scenarios tr td.failed  {
+  background-color: #f2dede;
+  color: #b94a48;
+}
+
+
+#scenarios tr.failed:hover td,
+#scenarios tr td.failed:hover {
+  background-color: #e7c3c3;
+  color: #b94a48;
+}
+
+#scenarios tr.passed td,
+#scenarios tr td.passed {
+}
+
+#scenarios tr.passed:hover td,
+#scenarios tr td.passed:hover {
+  background-color: #bde0af;
+}
+
+div.dataTables_length label {
+  width: 460px;
+  float: left;
+  text-align: left;
+}
+
+div.dataTables_length select {
+  width: 75px;
+}
+
+div.dataTables_filter label {
+  float: right;
+}
+
+div.dataTables_info {
+  padding-top: 8px;
+}
+
+div.dataTables_paginate {
+  float: right;
+  margin: 0;
+}
+
+
+table.table thead .sorting,
+table.table thead .sorting_asc,
+table.table thead .sorting_desc,
+table.table thead .sorting_asc_disabled,
+table.table thead .sorting_desc_disabled {
+  cursor: pointer;
+  *cursor: hand;
+}
+
+table.table thead .sorting { background: url('../img/sort_both.png') no-repeat center right; }
+table.table thead .sorting_asc { background: url('../img/sort_asc.png') no-repeat center right; }
+table.table thead .sorting_desc { background: url('../img/sort_desc.png') no-repeat center right; }
+
+table.table thead .sorting_asc_disabled { background: url('../img/sort_asc_disabled.png') no-repeat center right; }
+table.table thead .sorting_desc_disabled { background: url('../img/sort_desc_disabled.png') no-repeat center right; }
+
+

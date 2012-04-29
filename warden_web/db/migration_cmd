@@ -1,0 +1,7 @@
+rails generate model warden_project name:string type:string
+rails generate model test_case name:string feature_name:string feature_file_path:string last_run_at:timestamp registered_at:timestamp tc_id:integer
+rails generate model test_run_job name:string schedule_at:timestamp schedule_by:string status:string started_at:timestamp type:string run_node:string queue_name:string app_environment:string
+
+rails generate model test_case_run_info start_at:timestamp status:string tags:string external_data:text test_case_log:text end_at:timestamp number_of_steps:integer
+
+rails generate model test_run_history run_sequence:integer is_last_run:boolean

@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  run_sequence: 1
+  is_last_run: false
+
+two:
+  run_sequence: 1
+  is_last_run: false

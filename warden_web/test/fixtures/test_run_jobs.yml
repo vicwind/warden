@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  schedule_at: 2012-04-15 22:58:42
+  schedule_by: MyString
+  status: MyString
+  started_at: 2012-04-15 22:58:42
+  type: 
+  run_node: MyString
+  queue_name: MyString
+  app_environment: MyString
+
+two:
+  name: MyString
+  schedule_at: 2012-04-15 22:58:42
+  schedule_by: MyString
+  status: MyString
+  started_at: 2012-04-15 22:58:42
+  type: 
+  run_node: MyString
+  queue_name: MyString
+  app_environment: MyString

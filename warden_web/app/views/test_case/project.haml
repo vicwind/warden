@@ -1,0 +1,31 @@
+.span12
+  %h1.page-header
+    Trends for #{@project_data["name"]}
+    - if( @project_data["env"] == "prd")
+      (Production)
+    - elsif @project_data["env"] == "qa"
+      (QA)
+    - elsif @project_data["env"] == "staging"
+      (Staging) 
+
+  #status-chart
+  
+  #cuke_output.offset9.span2
+    - if @project_data["cuke_url"]
+      %a.btn.btn-primary.btn-medium(href="#{@project_data['cuke_url']}") Cucumber Output
+    
+    
+:javascript
+  var store = Ext.create('Ext.data.JsonStore', 
+  { fields: ['date', 'failed', 'passed', 'id'],
+    data: [ 
+    #{
+      @project_data["passed"].map { |date,passed|
+        "{ date: '#{date}', failed: #{@project_data["failed"][date]}, passed: #{passed}, id: #{@project_data["id"]} },"
+      }.join ' '
+    }
+    ]
+  });      
+    
+%script{:type => "text/javascript", :src=>"/app_js/project.js" }
+

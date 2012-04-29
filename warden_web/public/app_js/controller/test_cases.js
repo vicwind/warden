@@ -1,0 +1,75 @@
+Ext.define('WardenWeb.controller.test_cases', {
+  extend: 'Ext.app.Controller',
+  models: [
+    'test_case', 'test_case_folder', 'app_env'
+  ],
+  stores: [
+    'test_cases', 'test_case_folders', 'app_envs'
+  ],
+  views: [
+    'test_case.viewer',
+    'test_case.folder_viewer',
+    'test_case.search_bar'
+  ],
+  refs: [
+    {
+      selector: 'test_case_viewer',
+      ref: 'testCaseGrid'
+    }
+  ],
+  init: function() {
+    this.control({
+      'test_case_viewer': {
+        'itemdblclick': this.test_event,
+        'render': this.load_test_case
+      },
+      'test_case_viewer button[action=run_test_cases]': {
+        'click' : this.run_test_cases
+      },
+      'test_case_folder_viewer': {
+        'select': function(smodel, node, index) {
+          alert("selected");
+        }
+      }
+    });
+
+    console.log('Initialized Users! This happens before the Application launch function is called');
+  },
+  //custom define event handler
+  test_event: function(view, record){
+    alert("in test selected: " + record.data.name);
+  },
+  load_test_case: function(grid) {
+    grid.store.load();
+  },
+  run_test_cases: function() {
+    var selected_test_cases =
+      this.getTestCaseGrid().getSelectionModel().getSelection();
+    var str = "";
+    var tc_ids = []
+    for(var i = 0; i < selected_test_cases.length; i++){
+      str += selected_test_cases[i].get("name") + "\n";
+      tc_ids.push(selected_test_cases[i].get("tc_id"));
+    }
+    alert(str);
+    this.request_run_test_cases(tc_ids);
+  },
+  request_run_test_cases: function(tc_ids) {
+    var app_env = this.getTestCaseGrid().
+      query("combo[name='app_env']")[0].getValue();
+    Ext.Ajax.request({
+      url: '/test_case/run_test_job',
+      params: {
+        "tc_ids[]": tc_ids,
+        app_environment: app_env,
+        name: 'test_run'
+      },
+      success: function(response){
+        var text = response.responseText;
+        alert(text)
+        // process server response here
+      }
+    });
+  }
+
+});

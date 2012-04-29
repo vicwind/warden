@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  start_at: 2012-04-15 23:01:36
+  status: MyString
+  tags: MyString
+  external_data: MyText
+  test_case_log: MyText
+  end_at: 2012-04-15 23:01:36
+  number_of_steps: 1
+
+two:
+  start_at: 2012-04-15 23:01:36
+  status: MyString
+  tags: MyString
+  external_data: MyText
+  test_case_log: MyText
+  end_at: 2012-04-15 23:01:36
+  number_of_steps: 1
