@@ -8,4 +8,4 @@ gem "typhoeus"
 gem 'i18n'
 gem 'rubyzip'
 gem 'curb'
-
+gem "faraday" #HTTP/REST API client library.
