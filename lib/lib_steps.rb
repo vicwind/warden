@@ -50,7 +50,7 @@ Given /^user is using page objects to access the default test target environment
   step_detail += " with locale '#{ENV["WARDEN_TEST_TARGET_LOCALE"]}'" if ENV["WARDEN_TEST_TARGET_LOCALE"]
 
   Warden.add_test_target_detail(step_detail)
-  @page = page_class.new(Capybara.current_session)
+  @page = page_class.new(Capybara.current_session, @warden_session)
   @page.visit
 end
 
