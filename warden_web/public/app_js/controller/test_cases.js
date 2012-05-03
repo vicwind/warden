@@ -28,12 +28,12 @@ Ext.define('WardenWeb.controller.test_cases', {
       },
       'test_case_folder_viewer': {
         'select': function(smodel, node, index) {
-          alert("selected");
+          //alert("selected");
         }
       }
     });
 
-    console.log('Initialized Users! This happens before the Application launch function is called');
+    console.log('Initialized Utest_case_run_info_grid_viewersers! This happens before the Application launch function is called');
   },
   //custom define event handler
   test_event: function(view, record){
@@ -51,7 +51,7 @@ Ext.define('WardenWeb.controller.test_cases', {
       str += selected_test_cases[i].get("name") + "\n";
       tc_ids.push(selected_test_cases[i].get("tc_id"));
     }
-    alert(str);
+    Ext.Msg.alert('Status:', str);
     this.request_run_test_cases(tc_ids);
   },
   request_run_test_cases: function(tc_ids) {
@@ -66,7 +66,7 @@ Ext.define('WardenWeb.controller.test_cases', {
       },
       success: function(response){
         var text = response.responseText;
-        alert(text)
+        Ext.Msg.alert("Status:", "Test job has been scheduled.")
         // process server response here
       }
     });

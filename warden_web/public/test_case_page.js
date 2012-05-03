@@ -1,6 +1,6 @@
 Ext.Loader.setConfig({enabled:true});
 Ext.Loader.setPath('Ext', '../extjs-4.0.7/src');
-
+Ext.require('Ext.window.MessageBox');
 Ext.application({
   name: 'WardenWeb',
   appFolder: '../app_js',

@@ -12,8 +12,8 @@ Ext.define('WardenWeb.controller.test_run_job', {
   init: function() {
     this.control({
       'test_run_job_viewer': {
-        'render': this.load_test_run_jobs,
-        'select': function() {alert("iam selected")}
+        'render': this.load_test_run_jobs
+        //'select': function() {alert("iam selected")}
       }
     });
     console.log("test_run_job controller is initialized!")

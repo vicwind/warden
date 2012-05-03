@@ -1,20 +1,27 @@
 require 'resque/server'
 
 WardenWeb::Application.routes.draw do
-
   mount Resque::Server.new, :at => "/resque"
 
+  get "test_case_run_info/index"
 
   get "test_run_job/index"
+  get "test_run_job/get_test_run_job_with_tc_info"
+
 
   get "test_case/index"
   get "test_case/trend"
   get "test_case/project/:id", :controller => :test_case, :action => :project
 
   get "test_case/extjs_tree"
+  get "test_case_run_info/get_data_by_job_id"
   post "test_case/run_test_job"
 
   resources :test_case
+  resources :test_case_run_info
+  resources :test_run_job
+
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

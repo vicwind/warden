@@ -13,8 +13,8 @@ class TestRunJob < ActiveRecord::Base
   end
   #Resque method hook, this method will be called by Resque worker to
   #start the job
-  def self.perform(system_cmd, id)
-     TestRunJob.find(id).worker_run_job_by_id(system_cmd)
+  def self.perform(system_cmd, id, tc_ids)
+     TestRunJob.find(id).worker_run_job_by_id(system_cmd, tc_ids)
   end
 
   #Schedule and run the job by tc_ids
@@ -25,22 +25,26 @@ class TestRunJob < ActiveRecord::Base
     logger.info "These are the tc_ids that will be run #{tc_ids.join(',')}"
     self.start_at = Time.now
     save!
-    run_cmd = "#{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')}"
-    logger.info "********************Running: #{run_cmd}"
     create_test_case_run_info(tc_ids)
-    Resque.enqueue(TestRunJob, run_cmd , self.id)
-    #system(run_cmd)
+
+    tc_run_info_ids = get_test_case_run_info_ids()
+    run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_ids.join(',')}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')}"
+    logger.info "********************Running: #{run_cmd}"
+
+    #this line can be abstracted out as to a load balancer method
+    Resque.enqueue(TestRunJob, run_cmd , self.id, tc_ids)
   end
 
-  def worker_run_job_by_id(cmd)
+
+  def worker_run_job_by_id(cmd, tc_ids)
     self.queue_name = self.class.get_queue_name()
     self.run_node = `hostname -f` #get the name from shell
     self.status = "Running"
     save!
-    #system(cmd)
+    system(cmd)
     puts
     puts "------BEFORE-----------#{puts self.attributes}"
-     self.status = "Done"
+    self.status = "Done"
     puts "Saving job #{self.status}"
     save!
     puts "------AFTER-----------#{puts self.attributes}"
@@ -68,6 +72,11 @@ class TestRunJob < ActiveRecord::Base
         test_run_job: self
       })
     end
+  end
+
+  def get_test_case_run_info_ids()
+    TestCaseRunInfo.where("test_run_job_id = ?", self.id).
+      select(:id).collect{ |tc| tc.id }
   end
 
 
