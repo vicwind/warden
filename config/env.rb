@@ -11,6 +11,7 @@ require "#{File.dirname(__FILE__)}/../lib/link_checker"
 require "#{File.dirname(__FILE__)}/../lib/price_rogue"
 require "#{File.dirname(__FILE__)}/../lib/page_objects"
 require "#{File.dirname(__FILE__)}/../lib/gerbil"
+require "#{File.dirname(__FILE__)}/../lib/cucumber_formatter"
 require "#{File.dirname(__FILE__)}/../config/sauce_connect_config"
 World(Warden)
 
@@ -98,6 +99,20 @@ AfterConfiguration do |config|
   end
 end
 
+if ENV['TC_RUN_INFO_IDS'] and !ENV['TC_RUN_INFO_IDS'].empty?
+  require 'warden_web_interface'
+
+  test_case_run_info_id_list = ENV['TC_RUN_INFO_IDS'].split(',')
+
+  After do |scenario|
+    if current_tc_run_info_id = test_case_run_info_id_list.delete_at(0)
+      status = (scenario.failed?)? "Failed" : "Passed"
+      WardenWebInterface.
+        update_test_case_run_info_status(current_tc_run_info_id, status)
+    end
+  end
+end
+
 at_exit do
   # puts Warden.test_case_manager().find_all_features_by_project('BB.ca Web BG').to_yaml
   # puts Warden.test_case_manager().find_all_scenarios_by_feature('BB.ca Web BG',
@@ -105,7 +120,6 @@ at_exit do
   #puts  Warden.test_case_manager().tc_id_to_run_path(24)
   #puts  Warden.test_case_manager().tc_id_to_run_path(1)
 end
-
 # AfterStep do |scenario|
 
 # end
