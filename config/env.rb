@@ -12,6 +12,7 @@ require "#{File.dirname(__FILE__)}/../lib/price_rogue"
 require "#{File.dirname(__FILE__)}/../lib/page_objects"
 require "#{File.dirname(__FILE__)}/../lib/gerbil"
 require "#{File.dirname(__FILE__)}/../lib/cucumber_formatter"
+require "#{File.dirname(__FILE__)}/../lib/warden_web_formatter"
 require "#{File.dirname(__FILE__)}/../config/sauce_connect_config"
 World(Warden)
 
@@ -39,7 +40,7 @@ ENV['WARDEN_ENABLE_TEST_CASE_REGISTRATION'] = "1"
 Capybara.configure do |config|
   config.run_server = false
   config.default_driver = :selenium
-  config.default_wait_time = 30 #for ajax heavy site, site it to a higher number
+  config.default_wait_time = 20 #for ajax heavy site, site it to a higher number
 end
 
 require 'sauce/capybara'
@@ -102,18 +103,41 @@ end
 if ENV['TC_RUN_INFO_IDS'] and !ENV['TC_RUN_INFO_IDS'].empty?
   require 'warden_web_interface'
 
+  #Note: the order of this array is important, as it will be used to
+  #  update the test case run info record in Warden Web
   test_case_run_info_id_list = ENV['TC_RUN_INFO_IDS'].split(',')
+  current_tc_run_info_id = nil
+
+  Before do |scenario|
+    if current_tc_run_info_id = test_case_run_info_id_list.delete_at(0)
+      WardenWebInterface.update_test_case_run_info(current_tc_run_info_id, {
+        :start_at => Time.now,
+        :status => "Running"
+      })
+    end
+  end
 
   After do |scenario|
-    if current_tc_run_info_id = test_case_run_info_id_list.delete_at(0)
+    if current_tc_run_info_id
       status = (scenario.failed?)? "Failed" : "Passed"
+      exeception_msg = ''
+      if scenario.failed?
+        exeception_msg = "\n\n" + scenario.exception.message + "\n"
+        exeception_msg += scenario.exception.backtrace.join("\n")
+      end
       WardenWebInterface.
         update_test_case_run_info_status(current_tc_run_info_id, status)
+      current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg
+      WardenWebInterface.
+        update_test_case_run_info_log(current_tc_run_info_id, current_scenario_log)
     end
   end
 end
 
 at_exit do
+  # puts "-------------------------------"
+  # puts WardenWebInterface.read_log_from_buffer
+  # puts WardenWebInterface.read_log_from_buffer
   # puts Warden.test_case_manager().find_all_features_by_project('BB.ca Web BG').to_yaml
   # puts Warden.test_case_manager().find_all_scenarios_by_feature('BB.ca Web BG',
   #
