@@ -8,6 +8,12 @@ Ext.define('WardenWeb.view.test_case.viewer', {
     this.tbar = [
       { xtype: 'test_case_search_bar' },
       {
+        xtype: 'textfield',
+        emptyText: "Please enter a job name.",
+        name: 'job_name',
+        fieldLabel: 'Job Name'
+      },
+      {
         xtype: 'combo',
         store: 'app_envs',
         name: 'app_env',

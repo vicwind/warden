@@ -24,9 +24,9 @@
             %li{:class => ("active" if request.path_info == "/test_case/index" )}
               %a(href="/test_case/index") Schedule Run
             %li{:class => ("active" if request.path_info == "/test_run_job/index" )}
-              %a(href="/test_run_job/index") Job Status
-            %li{:class => ("active" if request.path_info == "" )}
-              %a(href="/test_case_run_info") Run Report
+              %a(href="/test_run_job/index") Job Run Status
+            -# %li{:class => ("active" if request.path_info == "" )}
+            -#   %a(href="/test_case_run_info") Run Report
             %li{:class => ("active" if request.path_info == "" )}
               %a(href="/test_case/trend") Run Result Trend
             %li{:class => ("active" if request.path_info == "/resque" )}

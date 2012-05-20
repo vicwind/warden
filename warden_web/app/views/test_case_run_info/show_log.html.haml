@@ -1,0 +1,12 @@
+= javascript_include_tag "http://yandex.st/highlightjs/6.2/highlight.min.js"
+= javascript_include_tag "http://cucumber.github.com/gherkin-syntax-highlighters/highlight.js/highlight/src/highlight.js"
+= stylesheet_link_tag 'http://yandex.st/highlightjs/6.2/styles/idea.min.css'
+= javascript_include_tag '/gherkin_en'
+
+:javascript
+  hljs.initHighlightingOnLoad();
+
+#log_content
+  %pre
+    %code
+      = @record.test_case_log.empty? ? "Log is not yet avaliable." : @record.test_case_log

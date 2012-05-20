@@ -45,5 +45,7 @@ class TestCaseRunInfoController < ApplicationController
     end
   end
 
-
+  def show_log
+    @record = TestCaseRunInfo.find(params[:id])
+  end
 end

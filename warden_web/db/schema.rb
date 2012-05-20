@@ -14,16 +14,16 @@
 ActiveRecord::Schema.define(:version => 20120416060756) do
 
   create_table "test_case_run_infos", :force => true do |t|
-    t.datetime "start_at",            :null => false
     t.string   "status",              :null => false
-    t.string   "tags",                :null => false
-    t.text     "external_data",       :null => false
-    t.text     "test_case_log",       :null => false
-    t.datetime "end_at",              :null => false
-    t.integer  "number_of_steps",     :null => false
     t.integer  "test_case_id",        :null => false
     t.integer  "test_run_job_id",     :null => false
     t.integer  "test_run_history_id", :null => false
+    t.string   "tags"
+    t.text     "test_case_log"
+    t.text     "external_data"
+    t.integer  "number_of_steps"
+    t.datetime "end_at"
+    t.datetime "start_at"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
   end

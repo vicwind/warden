@@ -81,10 +81,12 @@ class TestCaseController < ApplicationController
   def run_test_job()
     tc_ids = params[:tc_ids]
 
+    job_name = (params[:job_name].present?) ?
+      params[:job_name] : "Test job #{Time.now}"
     #create a new job object and call run with a list of tc_id array
     new_test_job = TestRunJob.new({
       app_environment: params[:app_environment],
-      name: params[:name],
+      name: job_name,
       queue_name: "default",
       run_node: "localhost",
       schedule_at: Time.now,

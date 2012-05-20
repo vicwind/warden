@@ -2,13 +2,7 @@ class CreateTestCaseRunInfos < ActiveRecord::Migration
   def change
     create_table :test_case_run_infos do |t|
       t.with_options(:null => false) do |tt|
-        tt.timestamp :start_at
         tt.string :status
-        tt.string :tags
-        tt.text :external_data
-        tt.text :test_case_log
-        tt.timestamp :end_at
-        tt.integer :number_of_steps
 
         #foreign keys
         tt.integer :test_case_id
@@ -16,6 +10,12 @@ class CreateTestCaseRunInfos < ActiveRecord::Migration
         tt.integer :test_run_history_id
       end
 
+      t.string :tags
+      t.text :test_case_log
+      t.text :external_data
+      t.integer :number_of_steps
+      t.timestamp :end_at
+      t.timestamp :start_at
       t.timestamps
     end
   end

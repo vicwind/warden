@@ -28,7 +28,7 @@ class TestRunJob < ActiveRecord::Base
     create_test_case_run_info(tc_ids)
 
     tc_run_info_ids = get_test_case_run_info_ids()
-    run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_ids.join(',')}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')}"
+    run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_ids.join(',')}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')} >/dev/null 2>&1"
     logger.info "********************Running: #{run_cmd}"
 
     #this line can be abstracted out as to a load balancer method
@@ -57,14 +57,14 @@ class TestRunJob < ActiveRecord::Base
 
     test_cases.each do |tc|
       test_case_info = TestCaseRunInfo.create({
-        start_at: Time.now,
+        start_at: nil,
         status: "Queued",
         tags: "",
         external_data: "",
         test_case_log: "",
-        end_at: Time.now,
+        end_at: nil,
         test_case: tc,
-        number_of_steps: 0,
+        number_of_steps: nil,
         test_run_history: TestRunHistory.create({
           run_sequence: 0,
           is_last_run: true

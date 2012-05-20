@@ -17,6 +17,13 @@ Ext.define('WardenWeb.view.test_run_job.viewer', {
         tpl: "{pass_rate}%",
         flex: 1
       },
+      {
+        header: 'Passed/Failed/Total',
+        xtype: 'templatecolumn',
+        //dataIndex: 'total_number_of_test_cases',
+        tpl: "{number_of_passed}/{number_of_failed}/{total_number_of_test_cases}",
+        flex: 1
+      },
       { header: 'Run Status ', dataIndex: 'status', flex: 1}
     ];
 

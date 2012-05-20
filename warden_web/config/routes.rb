@@ -4,6 +4,7 @@ WardenWeb::Application.routes.draw do
   mount Resque::Server.new, :at => "/resque"
 
   get "test_case_run_info/index"
+  get "test_case_run_info/show_log"
 
   get "test_run_job/index"
   get "test_run_job/get_test_run_job_with_tc_info"
