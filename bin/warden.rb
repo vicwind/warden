@@ -94,6 +94,12 @@ class WardenCLI
 
   end
 
+  def self.test()
+    require "#{File.dirname(__FILE__)}/../lib/warden_web_interface"
+    
+    WardenWebInterface.update_test_case_run_info_log(1, "lol")
+  end
+
   def self.print_test_cases(scenario_data_array)
     if !scenario_data_array.empty?
       puts "TC_ID\tProject Name\tFeature Name\tScenario Name\tLine Number"
@@ -146,6 +152,7 @@ class WardenCLI
         cucumber_run_cmd = "cucumber " + found_features['feature_files'].join(' ') + ' -n '+
           found_features['scenario_names'].join(' -n ')
         cucumber_run_cmd += ' --dry-run' if options[:'dry-run'] == true
+        cucumber_run_cmd += ' --format Cucumber::Formatter::WardenWebPretty' if true
         puts cucumber_run_cmd
         #puts "---#{options.to_yaml}----------"
         system(cucumber_run_cmd)
@@ -211,6 +218,8 @@ c.subcommand WardenCLI do |subcommand|
     c.options :feature => String, :f => :feature
     c.options :scenario => String, :s => :scenario
     c.options :id => String, :i=> :id
+  end
+  if :test == subcommand
   end
   c.parse
 end
