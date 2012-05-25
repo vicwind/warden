@@ -25,10 +25,29 @@ class TestRunJob < ActiveRecord::Base
     logger.info "These are the tc_ids that will be run #{tc_ids.join(',')}"
     self.start_at = Time.now
     save!
-    create_test_case_run_info(tc_ids)
 
-    tc_run_info_ids = get_test_case_run_info_ids()
-    run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_ids.join(',')}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')} >/dev/null 2>&1"
+    tc_id_tc_info_ids_pair = create_test_case_run_info(tc_ids) #get_test_case_run_info_ids()
+    enqueue_by_scenario(env_str, tc_id_tc_info_ids_pair)
+  end
+
+  def enqueue_by_scenario(env_str, tc_id_tc_info_ids_pair)
+
+    split_arrys = tc_id_tc_info_ids_pair.transpose
+    tc_id = split_arrys[0]
+    tc_run_info_id = split_arrys[0]
+
+    tc_id_tc_info_ids_pair.each do | (tc_id, tc_run_info_id) |
+      run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_id}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_id}"
+      logger.info "********************Running: #{run_cmd}"
+
+      #this line can be abstracted out as to a load balancer method
+      Resque.enqueue(TestRunJob, run_cmd , self.id, tc_id)
+    end
+  end
+
+  def enqueue_sequential(env_str, tc_id_tc_info_ids_pair)
+
+    run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_ids.join(',')}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')}"
     logger.info "********************Running: #{run_cmd}"
 
     #this line can be abstracted out as to a load balancer method
@@ -52,6 +71,7 @@ class TestRunJob < ActiveRecord::Base
 
 
   def create_test_case_run_info(tc_ids)
+    tc_id_tc_info_ids_pair = []
 
     test_cases = TestCase.find(tc_ids)
 
@@ -71,7 +91,9 @@ class TestRunJob < ActiveRecord::Base
         }),
         test_run_job: self
       })
+      tc_id_tc_info_ids_pair << [tc.tc_id, test_case_info.id]
     end
+    tc_id_tc_info_ids_pair
   end
 
   def get_test_case_run_info_ids()

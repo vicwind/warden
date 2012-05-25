@@ -18,9 +18,9 @@ class TestRunJobController < ApplicationController
         job.test_case_run_infos.each do |tc_run_info|
           if tc_run_info.status == "Passed"
             number_of_passed += 1
-          elsif tc_run_info.status == "Queued"
+          elsif tc_run_info.status == 'Queued'
             number_of_queued += 1
-          else
+          elsif tc_run_info.status == 'Failed'
             number_of_failed += 1
           end
         end
