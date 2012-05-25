@@ -155,7 +155,7 @@ module Warden
       end
     end
 
-    attr_accessor :current_scenario, :current_feature
+    attr_accessor :current_scenario, :current_feature, :external_data
 
 
     def scenario_name
