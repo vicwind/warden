@@ -37,7 +37,7 @@ class TestRunJob < ActiveRecord::Base
     tc_run_info_id = split_arrys[0]
 
     tc_id_tc_info_ids_pair.each do | (tc_id, tc_run_info_id) |
-      run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_id}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_id}"
+      run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_id}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_id} 1>/dev/null 2>&1"
       logger.info "********************Running: #{run_cmd}"
 
       #this line can be abstracted out as to a load balancer method
@@ -47,7 +47,7 @@ class TestRunJob < ActiveRecord::Base
 
   def enqueue_sequential(env_str, tc_id_tc_info_ids_pair)
 
-    run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_ids.join(',')}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')}"
+    run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_ids.join(',')}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')} 1>/dev/null 2>&1"
     logger.info "********************Running: #{run_cmd}"
 
     #this line can be abstracted out as to a load balancer method
