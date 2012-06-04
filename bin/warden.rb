@@ -12,7 +12,7 @@ class WardenCLI
     end
   end
 
-  def self.run(options={})
+  def self.parse_tc_ids(options={})
     tc_ids = []
 
     if !options[:'tc_id_list'].empty?
@@ -28,8 +28,22 @@ class WardenCLI
         exit 1
       end
     end
+    tc_ids
+  end
+
+  def self.run(options={})
+
+    tc_ids = parse_tc_ids(options)
     #puts tc_ids.to_yaml
     run_by_tc_ids(tc_ids, options)
+  end
+
+  def self.web_run(options={})
+    tc_ids = parse_tc_ids(options)
+    run_by_tc_ids_through_warden_web(tc_ids, {
+      :job_name => options[:job_name],
+      :environment => options[:environment],
+    })
   end
 
   def self.show(options={})
@@ -94,10 +108,9 @@ class WardenCLI
 
   end
 
-  def self.test()
+  def self.test
     require "#{File.dirname(__FILE__)}/../lib/warden_web_interface"
-    
-    WardenWebInterface.update_test_case_run_info_log(1, "lol")
+    #WardenWebInterface.update_test_case_run_info_log(1, "lol")
   end
 
   def self.print_test_cases(scenario_data_array)
@@ -166,6 +179,18 @@ class WardenCLI
     end
 
     exit exit_code
+  end #of run_by_tc_ids
+
+  #params:
+  # tc_ids: a list of tc_ids
+  # options: refered to options on WardenWebInterface.schedule_job_run
+  def self.run_by_tc_ids_through_warden_web(tc_ids, options={})
+    require "#{ENV['WARDEN_HOME']}/lib/warden_web_interface"
+    response = WardenWebInterface.schedule_job_run(tc_ids, options)
+    puts "Server Response: #{response.body}"
+
+    exit_code = (response.status == 200) ? 0 : 1
+    exit exit_code
   end
 
 end
@@ -174,6 +199,8 @@ c = Clint.new
 c.usage do
   $stderr.puts <<EOF
 Usage: #{File.basename(__FILE__)} run [-l|--tc_id_list <Tc_id1,Tc_id2,... >] [-f|--file <tc_ids_file>]
+       #{File.basename(__FILE__)} web_run [-l|--tc_id_list <Tc_id1,Tc_id2,... >] [-f|--file <tc_ids_file>]
+                         [-n|-job_name] [-e|--environment]
        #{File.basename(__FILE__)} show [-p|--project <project_name>]
                       [-f|--feature <feature_name>]
                       [-s|--scenario <scenario_name>]
@@ -187,6 +214,11 @@ c.help do
   run [--tc_id_list <Tc_id1,Tc_id2,... >] [--file <tc_ids_file>]
     --tc_id_list [-l]: Run the list of test case(Cucumber Scenario). The list is the the form of comma sepearted string.
     --file [-f] : Run the test case IDs listed in the file
+  web_run [--tc_id_list <Tc_id1,Tc_id2,... >] [--file <tc_ids_file>]
+    --tc_id_list [-l]: Run the list of test case(Cucumber Scenario). The list is the the form of comma sepearted string.
+    --file [-f] : Run the test case IDs listed in the file
+    --job_name [-n] : Name of the job
+    --environment [-e] : set the WARDEN_TEST_TARGET_ENV environment variable for the job
   show [--project <project_name>] [--feature <feature_name>] [--scenario <scenario_name>] [--id <tc_id>] [--strict_mathcing]
     --project [-p] : show all the test case of the project
     --feature [-f] : show all the test case that matched the feature name pattern
@@ -210,6 +242,12 @@ c.subcommand WardenCLI do |subcommand|
     c.options :'dry-run' => false, :d => :'dry-run'
     c.options :'tc_id_list' => String , :l => :'tc_id_list'
     c.options :file => String, :f => :file
+  end
+  if :web_run == subcommand
+    c.options :'tc_id_list' => String , :l => :'tc_id_list'
+    c.options :file => String, :f => :file
+    c.options :job_name => String, :n => :job_name
+    c.options :environment => String, :e => :environment
   end
   if :show == subcommand
     c.options :all => true, :a => :all
