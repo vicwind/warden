@@ -24,9 +24,13 @@ class TestRunJobController < ApplicationController
             number_of_failed += 1
           end
         end
+
+        pass_rate = total_number_of_test_cases == 0 ?
+          0 : number_of_passed / total_number_of_test_cases * 100.00
+
         job.attributes.merge({
           :total_number_of_test_cases => total_number_of_test_cases,
-          :pass_rate => number_of_passed / total_number_of_test_cases * 100.00,
+          :pass_rate => pass_rate,
           :number_of_queued => number_of_queued,
           :number_of_passed => number_of_passed,
           :number_of_failed => number_of_failed
