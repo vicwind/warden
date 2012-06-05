@@ -1,6 +1,8 @@
 Ext.define('WardenWeb.store.test_case_folders',{
   extend: 'Ext.data.TreeStore',
   model: 'WardenWeb.model.test_case_folder',
+  autoLoad: true,
+  autoSync: true,
   proxy: {
     type: 'ajax',
     url: '/test_case/extjs_tree.json',

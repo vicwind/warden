@@ -15,6 +15,10 @@ Ext.define('WardenWeb.controller.test_cases', {
     {
       selector: 'test_case_viewer',
       ref: 'testCaseGrid'
+    },
+    {
+      selector: 'test_case_folder_viewer',
+      ref: 'testCaseFolder'
     }
   ],
   init: function() {
@@ -46,6 +50,17 @@ Ext.define('WardenWeb.controller.test_cases', {
     grid.store.load();
   },
   run_test_cases: function() {
+    var test_case_folder = this.getTestCaseFolder();
+    var suite_file_path = null;
+    var selected_suite = null;
+    var suite_files_selections = test_case_folder.getSelectionModel().getSelection();
+
+    if(suite_files_selections.length > 0){
+      selected_suite = test_case_folder.getSelectionModel().getSelection()[0];
+      if (selected_suite.raw.suite_path != '')
+        suite_file_path = selected_suite.raw.suite_path;
+    }
+
     var selected_test_cases =
       this.getTestCaseGrid().getSelectionModel().getSelection();
     var str = "";
@@ -54,31 +69,57 @@ Ext.define('WardenWeb.controller.test_cases', {
       str += selected_test_cases[i].get("name") + "\n";
       tc_ids.push(selected_test_cases[i].get("tc_id"));
     }
-    //Ext.Msg.alert('Status:', str);
-    if(selected_test_cases.length > 0)
+
+    test_case_folder.getSelectionModel().deselectAll();
+
+    if(suite_file_path)
+      this.request_run_test_cases(suite_file_path);
+    else if(selected_test_cases.length > 0)
       this.request_run_test_cases(tc_ids);
     else
-      Ext.Msg.alert("Status:", 'Please select a test case.');
+      Ext.Msg.alert("Status:", 'Please select a test case or a suite file.');
   },
-  request_run_test_cases: function(tc_ids) {
+  request_run_test_cases: function(tc_ids_or_suite_file_path) {
     var app_env = this.getTestCaseGrid().
       query("combo[name='app_env']")[0].getValue();
     var job_name = this.getTestCaseGrid().
       query("textfield[name='job_name']")[0].getValue();
 
+    if(this.is_array(tc_ids_or_suite_file_path)){
+      var tc_ids = tc_ids_or_suite_file_path
+      var msg =  'Total of ' + tc_ids.length + " test cases have been scheduled.";
+    }else{
+      var tc_ids = [];
+      var suite_file_path = tc_ids_or_suite_file_path;
+      var msg = 'Suite file "' + suite_file_path + '" has been scheduled.';
+    }
+
     Ext.Ajax.request({
       url: '/test_case/run_test_job',
       params: {
         "tc_ids[]": tc_ids,
+        suite_file_path: suite_file_path,
         app_environment: app_env,
         job_name: job_name,
       },
       success: function(response){
         var text = response.responseText;
-        Ext.Msg.alert("Status:", tc_ids.length + " test cases have been scheduled.")
+        Ext.Msg.alert("Status:", msg)
         // process server response here
+      },
+      failure: function(response){
+        Ext.Msg.show({
+          title: "Status:",
+          icon: Ext.Msg.ERROR,
+          msg: "Server errors.",
+          buttons: Ext.Msg.OK
+        })
       }
     });
+  },
+  is_array: function (obj) {
+    return Object.prototype.toString.apply(obj) === '[object Array]';
   }
+
 
 });

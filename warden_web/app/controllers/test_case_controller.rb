@@ -2,6 +2,8 @@ require 'm_warden_models'
 
 class TestCaseController < ApplicationController
 
+  WARDEN_PROJECTS_PATH = "#{ENV['WARDEN_HOME']}/projects"
+
   respond_to :html, :xml, :json, :js
 
   def index
@@ -60,8 +62,12 @@ class TestCaseController < ApplicationController
 
       project_suite_file_paths.
         grep(/#{project_name}/).each do |suite_file_path|
+
+        suite_file_relative_path =
+          suite_file_path.sub(/.*#{WARDEN_PROJECTS_PATH}/,'')
         tcs.push({
           text: suite_file_path.split('/').last,
+          suite_path: suite_file_relative_path,
           leaf: true
         })
         end
@@ -80,6 +86,8 @@ class TestCaseController < ApplicationController
 
   def run_test_job()
     tc_ids = params[:tc_ids]
+
+    tc_ids = get_tc_ids_from_suite_file(WARDEN_PROJECTS_PATH + params[:suite_file_path]) if tc_ids.blank?
 
     job_name = (params[:job_name].present?) ?
       params[:job_name] : "Test job #{Time.now}"
@@ -128,4 +136,12 @@ class TestCaseController < ApplicationController
 
   ############END#################
 
+  protected
+  def get_tc_ids_from_suite_file(suite_file_path)
+    tc_ids = []
+    open(suite_file_path).each_line do |line|
+      tc_ids << line.strip if !line.blank?
+    end
+    tc_ids
+  end
 end
