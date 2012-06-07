@@ -1,4 +1,6 @@
 class TestRunJobController < ApplicationController
+  include ActionView::Helpers::NumberHelper
+
   respond_to :html, :xml, :json, :js
 
   def index
