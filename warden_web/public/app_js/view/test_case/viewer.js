@@ -20,6 +20,7 @@ Ext.define('WardenWeb.view.test_case.viewer', {
         fieldLabel: 'Environment',
         displayField: 'env_display',
         valueField: 'env',
+        editable: false,
         queryMode: 'local'
       },
       { xtype: 'button', text: 'Run', action: 'run_test_cases' }
