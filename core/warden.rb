@@ -8,7 +8,7 @@ module Warden
   include Capybara::DSL
 
   SCREEN_CAPTURE_DIR = "#{ENV["WARDEN_HOME"]}/screen-capture"
-  SCREEN_CAPTURE_SERVER = 'http://screen_capture_server.com/'
+  SCREEN_CAPTURE_SERVER = "http://#{`hostname`.strip}:8080/screen-capture"
   APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
   PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
 
@@ -275,6 +275,19 @@ module Warden
     #call Warden's project_path class methods
     def project_path
       Warden::project_path()
+    end
+
+    #return an array of screen capture links hash
+    def get_screen_capture_links(scenario)
+      links_text = self.class.get_scenario_screen_capture[scenario]
+      if links_text
+        links_data = links_text.inject([]) do |links, link_text|
+          status_type = link_text.match(/^\[Normal\]/) ? 'normal' : 'error'
+          url = link_text.match(/at: (.*)/)[1]
+          links << { :status_type => status_type, :url => url }
+        end
+      end
+      links_data
     end
 
     ########################

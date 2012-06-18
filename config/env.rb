@@ -60,6 +60,50 @@ Before do |scenario|
   @fd = OpenStruct.new( @warden_session.feature_data() )
 end
 
+if ENV['TC_RUN_INFO_IDS'] and !ENV['TC_RUN_INFO_IDS'].empty?
+  require 'warden_web_interface'
+
+  #Note: the order of this array is important, as it will be used to
+  #  update the test case run info record in Warden Web
+  test_case_run_info_id_list = ENV['TC_RUN_INFO_IDS'].split(',')
+  current_tc_run_info_id = nil
+
+  Before do |scenario|
+    if current_tc_run_info_id = test_case_run_info_id_list.delete_at(0)
+      WardenWebInterface.update_test_case_run_info(current_tc_run_info_id, {
+        :start_at => Time.now,
+        :status => "Running"
+      })
+    end
+  end
+
+  After do |scenario|
+    if current_tc_run_info_id
+      status = (scenario.failed?)? "Failed" : "Passed"
+      exeception_msg = ''
+      screen_capture_links = @warden_session.get_screen_capture_links(scenario)
+
+      if scenario.failed?
+        exeception_msg = "\n\n" + scenario.exception.message + "\n"
+        exeception_msg += scenario.exception.backtrace.join("\n")
+      end
+
+      current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg
+      WardenWebInterface.update_test_case_run_info(current_tc_run_info_id,{
+        :status => status,
+        :test_case_log => current_scenario_log,
+        :screen_capture_links => screen_capture_links.to_json
+        }
+      )
+      # WardenWebInterface.
+      #   update_test_case_run_info_status(current_tc_run_info_id, status)
+      # current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg
+      # WardenWebInterface.
+      #   update_test_case_run_info_log(current_tc_run_info_id, current_scenario_log)
+    end
+  end
+end
+
 After do |scenario|
   begin
     @warden_session.capture_screen_shot()# if scenario.failed?
@@ -83,7 +127,6 @@ After do |scenario|
     print e.backtrace[0..10].join("\n")
     raise e
   end
-
 end
 
 #setup configuration hook for loading feature and steps pkg from a different location
@@ -100,39 +143,7 @@ AfterConfiguration do |config|
   end
 end
 
-if ENV['TC_RUN_INFO_IDS'] and !ENV['TC_RUN_INFO_IDS'].empty?
-  require 'warden_web_interface'
 
-  #Note: the order of this array is important, as it will be used to
-  #  update the test case run info record in Warden Web
-  test_case_run_info_id_list = ENV['TC_RUN_INFO_IDS'].split(',')
-  current_tc_run_info_id = nil
-
-  Before do |scenario|
-    if current_tc_run_info_id = test_case_run_info_id_list.delete_at(0)
-      WardenWebInterface.update_test_case_run_info(current_tc_run_info_id, {
-        :start_at => Time.now,
-        :status => "Running"
-      })
-    end
-  end
-
-  After do |scenario|
-    if current_tc_run_info_id
-      status = (scenario.failed?)? "Failed" : "Passed"
-      exeception_msg = ''
-      if scenario.failed?
-        exeception_msg = "\n\n" + scenario.exception.message + "\n"
-        exeception_msg += scenario.exception.backtrace.join("\n")
-      end
-      WardenWebInterface.
-        update_test_case_run_info_status(current_tc_run_info_id, status)
-      current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg
-      WardenWebInterface.
-        update_test_case_run_info_log(current_tc_run_info_id, current_scenario_log)
-    end
-  end
-end
 
 at_exit do
   # puts "-------------------------------"

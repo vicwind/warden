@@ -19,6 +19,18 @@ Ext.define('WardenWeb.view.test_case_run_info.grid_viewer', {
         tpl: "<a href='/test_case_run_info/show_log?id={id}' target='_blank'>{name}</a>"
       },
       { header: 'Started at', dataIndex: 'start_at', flex: 1},
+      { header: 'Screen Capture', dataIndex: 'screen_capture_links', flex: 1,
+        renderer: function(value) {
+          var html_links = '';
+          var screen_capture_links = Ext.JSON.decode(value);
+          if(screen_capture_links){
+            for( var i = 0; i < screen_capture_links.length; i++ ){
+              html_links += '<a target="_" href="' + screen_capture_links[i].url + '"> Image </a>';
+            }
+          }
+          return html_links;
+        }
+      },
       { header: 'Status', dataIndex: 'status', flex: 1 },
 
     ];
