@@ -15,7 +15,7 @@ Ext.define('WardenWeb.view.test_case_run_info.grid_viewer', {
       { header: 'TC_ID', dataIndex: 'tc_id', width: 50 },
       { header: 'Project', dataIndex: 'project_name', flex: 1 },
       { header: 'Feature', dataIndex: 'feature_name', flex: 1 },
-      { header: 'Scenario', xtype: 'templatecolumn', flex: 1,
+      { header: 'Scenario', xtype: 'templatecolumn', dataIndex: 'name', flex: 1,
         tpl: "<a href='/test_case_run_info/show_log?id={id}' target='_blank'>{name}</a>"
       },
       { header: 'Started at', dataIndex: 'start_at', flex: 1},

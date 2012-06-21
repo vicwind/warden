@@ -6,7 +6,7 @@ Ext.define('WardenWeb.view.test_run_job.viewer', {
     this.store = 'test_run_jobs';
     this.columns = [
       {
-        header: 'Name', xtype:'templatecolumn', flex: 1,
+        header: 'Name', xtype: 'templatecolumn', dataIndex: 'name', flex: 1,
         tpl: "<a href='/test_case_run_info?job_id={id}'>{name}</a>"
       },
       { header: 'Schedule at', dataIndex: 'schedule_at', flex: 1},
@@ -20,12 +20,17 @@ Ext.define('WardenWeb.view.test_run_job.viewer', {
       {
         header: 'Passed/Failed/Total',
         xtype: 'templatecolumn',
-        //dataIndex: 'total_number_of_test_cases',
         tpl: "{number_of_passed}/{number_of_failed}/{total_number_of_test_cases}",
         flex: 1
       },
       { header: 'Run Status ', dataIndex: 'status', flex: 1}
     ];
+    this.dockedItems = [{
+        xtype: 'pagingtoolbar',
+        store: 'test_run_jobs',
+        dock: 'bottom',
+        displayInfo: true
+    }];
 
     this.callParent(arguments);
   }

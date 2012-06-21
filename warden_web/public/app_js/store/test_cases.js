@@ -1,16 +1,15 @@
 Ext.define('WardenWeb.store.test_cases', {
   extend: 'Ext.data.Store',
   model: 'WardenWeb.model.test_case',
-  pageSize: 999999999,
-  params:{
-    start: 0,
-    limit: 10
-  },
+  pageSize: 100,
+  remoteSort: true,
   proxy: {
     type: 'ajax',
     url: '/test_case.json',
     reader: {
-      type: 'json'
+      type: 'json',
+      root: 'collection',
+      totalProperty: 'total'
     }
   }
   // data: [

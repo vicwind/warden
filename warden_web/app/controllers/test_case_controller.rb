@@ -7,13 +7,21 @@ class TestCaseController < ApplicationController
   respond_to :html, :xml, :json, :js
 
   def index
-    @all_test_cases = TestCase.includes(:warden_project).find(:all)
 
+    parse_pagenation_and_sorting_params
+
+    @all_test_cases = TestCase.includes(:warden_project).limit(@limit).offset(@offset).order(@sort_order).find(:all)
+
+    @total_size = TestCase.count
     temp_obj = MWarden::Scenario.find(:all)
 
     respond_to do |format|
       format.html
-      format.json { render :json => @all_test_cases.to_json(:include => :warden_project)}
+      format.json { render :json => {
+          collection: @all_test_cases,
+          total: @total_size
+        }.to_json(:include => :warden_project)
+      }
     end
     #respond_with(@all_test_cases)
   end

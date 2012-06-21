@@ -1,17 +1,16 @@
 Ext.define('WardenWeb.store.test_case_run_infos', {
   extend: 'Ext.data.Store',
   model: 'WardenWeb.model.test_case_run_info',
-  pageSize: 999999999,
-  params:{
-    start: 0,
-    limit: 10,
-    job_id: 10
-  },
+  pageSize: 100,
+  remoteSort: true,
   proxy: {
     type: 'ajax',
     url: '/test_case_run_info/get_data_by_job_id.json',
+    extraParams: Ext.Object.fromQueryString(window.location.search),
     reader: {
-      type: 'json'
+      type: 'json',
+      root: 'collection',
+      totalProperty: 'total'
     }
   }
   // data: [
