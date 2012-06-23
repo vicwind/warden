@@ -1,3 +1,4 @@
+
 Warden is created to aim at better managed running automated test cases that's written using Cucumber and Capybara for multiple web application projects. It tries to leverage a proofed working pattern to organize test logic, test data, and naming mapping to help managing a large QA project that usually contains hundreds of test cases.
 
 By following the gradually modularization work flow: Record and play back -> enhance to script for robustness and add test logic and data separation -> modularize commonly used steps -> maximize modularization using page objects, we hope Warden will help us implement test case as fast as developing features and also lower the costs of maintaining constant changes of a evolving web application.
