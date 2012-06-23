@@ -1,31 +1,39 @@
 .span12
   %h1.page-header
-    Trends for #{@project_data["name"]}
+    Trends for #{@project_data["name"]} as of #{Time.now.strftime("%m/%d/%Y")}
     - if( @project_data["env"] == "prd")
       (Production)
     - elsif @project_data["env"] == "qa"
       (QA)
     - elsif @project_data["env"] == "staging"
-      (Staging) 
+      (Staging)
 
   #status-chart
-  
+
   #cuke_output.offset9.span2
     - if @project_data["cuke_url"]
       %a.btn.btn-primary.btn-medium(href="#{@project_data['cuke_url']}") Cucumber Output
-    
-    
+
+- if @project_data["failed_scenarios"].size > 0
+  %h2 Current Failing Testcases:
+  %table.table.table-bordered.table-striped
+    %tbody
+      %tr
+        %th Scenario Name
+      - @project_data["failed_scenarios"].each do |data|
+        %tr.alert.alert-error
+          %td!= data.gsub("\n","<br/>")
+
 :javascript
-  var store = Ext.create('Ext.data.JsonStore', 
+  var store = Ext.create('Ext.data.JsonStore',
   { fields: ['date', 'failed', 'passed', 'id'],
-    data: [ 
+    data: [
     #{
       @project_data["passed"].map { |date,passed|
         "{ date: '#{date}', failed: #{@project_data["failed"][date]}, passed: #{passed}, id: #{@project_data["id"]} },"
       }.join ' '
     }
     ]
-  });      
-    
-%script{:type => "text/javascript", :src=>"/app_js/project.js" }
+  });
 
+%script{:type => "text/javascript", :src=>"/app_js/project.js" }
