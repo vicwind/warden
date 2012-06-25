@@ -37,6 +37,10 @@ case $sub_cmd in
         echo "Unicorn processes list:"
         ps -eafw | grep unicorn | grep -v grep | grep -v warden_web.sh
         ;;
+      *)
+        echo "Error: required command start|stop|status"
+        exit 1
+        ;;
     esac
   ;;
 
@@ -92,6 +96,11 @@ case $sub_cmd in
         done
         echo "Done"
     esac
+  ;;
+  *)
+    echo "Usage: warden_web.sh unicorn [ start|stop|status ]"
+    echo "       warden_web.sh worker start <number_of_worker>"
+    echo "       warden_web.sh worker [ status|stop ]"
   ;;
 
 esac
