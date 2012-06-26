@@ -18,4 +18,20 @@ class ApplicationController < ActionController::Base
       sort_params.nil? ? '' : "#{sort_params['property']} #{sort_params['direction']}"
 
   end
+
+  #adding filtering condition to the model passed in, it will return a model
+  #with proper conditions imposed
+  def parse_filter_params(model)
+    filters_params =  ActiveSupport::JSON.decode(params[:filter]) if params[:filter]
+    filters_params ||= []
+    condition_str = ''
+    condition_values = []
+    filters_params.each do |filter_params|
+      condition_str += "#{filter_params['property']} like ? OR "
+      condition_values << "%#{filter_params['value']}%"
+    end
+    condition_str.sub!(/ OR $/,'')
+
+    model.where(condition_str, *condition_values )
+  end
 end

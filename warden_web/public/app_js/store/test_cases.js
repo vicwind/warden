@@ -3,6 +3,7 @@ Ext.define('WardenWeb.store.test_cases', {
   model: 'WardenWeb.model.test_case',
   pageSize: 100,
   remoteSort: true,
+  remoteFilter: true,
   proxy: {
     type: 'ajax',
     url: '/test_case.json',

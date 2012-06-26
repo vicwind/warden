@@ -4,7 +4,7 @@ Ext.define('WardenWeb.controller.test_cases', {
     'test_case', 'test_case_folder', 'app_env'
   ],
   stores: [
-    'test_cases', 'test_case_folders', 'app_envs'
+    'test_cases', 'test_case_folders', 'app_envs', 'test_case_searches'
   ],
   views: [
     'test_case.viewer',
@@ -36,6 +36,21 @@ Ext.define('WardenWeb.controller.test_cases', {
       'test_case_folder_viewer': {
         'select': function(smodel, node, index) {
           //alert("selected");
+        }
+      },
+      'test_case_viewer combo[name=search]': {
+        'keydown': function(combo, e, opt) {
+          console.log(e.keyCode);
+          if(e.keyCode === 13){
+            var filter_text = combo.getValue();
+            var store = this.getTest_casesStore();
+            store.filter([
+              { property: 'feature_name', value: filter_text},
+              { property: 'test_cases.name', value: filter_text},
+              { property: 'warden_projects.name', value: filter_text}
+            ]);
+            store.filters.clear();
+          }
         }
       }
     });

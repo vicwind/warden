@@ -1,5 +1,3 @@
-require 'm_warden_models'
-
 class TestCaseController < ApplicationController
 
   WARDEN_PROJECTS_PATH = "#{ENV['WARDEN_HOME']}/projects"
@@ -9,11 +7,11 @@ class TestCaseController < ApplicationController
   def index
 
     parse_pagenation_and_sorting_params
+    test_case_model = parse_filter_params(TestCase)
 
-    @all_test_cases = TestCase.includes(:warden_project).limit(@limit).offset(@offset).order(@sort_order).find(:all)
+    @all_test_cases = test_case_model.includes(:warden_project).limit(@limit).offset(@offset).order(@sort_order).find(:all)
 
-    @total_size = TestCase.count
-    temp_obj = MWarden::Scenario.find(:all)
+    @total_size = test_case_model.includes(:warden_project).count
 
     respond_to do |format|
       format.html
@@ -116,31 +114,46 @@ class TestCaseController < ApplicationController
     render :text=>"Good to Go!"
   end
 
+  def test_case_search_suguession
+    suguession = []
+    project_names = WardenProject.select(:name)
+    suguession = suguession | project_names.collect(&:name)
+    all_test_cases = TestCase.select("feature_name, name")
+    all_test_cases.each do |tc|
+      suguession << tc.feature_name
+      suguession << tc.name
+    end
+    suguession = suguession.uniq.inject([]) do |collection, entry|
+      collection << { name: entry}
+    end
+    respond_with(suguession)
+  end
+
   ###################
   # Integration actions from Ray's project
   # TODO: This is needed for rewrite
   ###################
-  def trend
-    @qa_data         = MWarden::calculate_projects_status("qa")
-    @staging_data    = MWarden::calculate_projects_status("staging")
-    @production_data = MWarden::calculate_projects_status("prd")
-  end
+  # def trend
+  #   @qa_data         = MWarden::calculate_projects_status("qa")
+  #   @staging_data    = MWarden::calculate_projects_status("staging")
+  #   @production_data = MWarden::calculate_projects_status("prd")
+  # end
 
-  def project
-    # Make sure id exists
-    project_id = params[:id]
+  # def project
+  #   # Make sure id exists
+  #   project_id = params[:id]
 
-    project = MWarden::Warden_Project.where(:id=>project_id).first
+  #   project = MWarden::Warden_Project.where(:id=>project_id).first
 
-    # Gather data about the project
-    @project_data = MWarden::calculate_project_status(project_id)
+  #   # Gather data about the project
+  #   @project_data = MWarden::calculate_project_status(project_id)
 
-    project_output_page = "/latest_run/#{project.environment}/#{project.project_name.gsub(' ','_').gsub('.','_')}_#{project.environment}.html"
+  #   project_output_page = "/latest_run/#{project.environment}/#{project.project_name.gsub(' ','_').gsub('.','_')}_#{project.environment}.html"
 
-    if File.exists?(File.dirname(__FILE__) + '/public' + project_output_page)
-      @project_data["cuke_url"] = "/latest_run/#{project_id}"
-    end
-  end
+  #   if File.exists?(File.dirname(__FILE__) + '/public' + project_output_page)
+  #     @project_data["cuke_url"] = "/latest_run/#{project_id}"
+  #   end
+  # end
 
   ############END#################
 

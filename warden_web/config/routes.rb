@@ -16,6 +16,8 @@ WardenWeb::Application.routes.draw do
 
   get "test_case/extjs_tree"
   get "test_case_run_info/get_data_by_job_id"
+  get "test_case/test_case_search_suguession"
+
   post "test_case/run_test_job"
 
   resources :test_case
