@@ -36,12 +36,12 @@ class JobMonitorDaemon < DaemonSpawn::Base
 
     while !@need_to_stop
       result = TestRunJob.find_by_sql("
-        select A.id, num_tc, num_passed
+        select A.id, A.num_tc, B.num_passed
         from
         (SELECT j.id , count(j.id) as num_tc FROM test_run_jobs as j, test_case_run_infos as i
           where j.id = i.test_run_job_id and j.status = 'Done' and schedule_at > '#{@check_time_stmp}'
             and j.name like '%#{@job_name}%'
-          group by j.id, i.status
+          group by j.id
         ) as A
         left join
         (SELECT j.id , count(i.status) as num_passed FROM test_run_jobs as j, test_case_run_infos as i
@@ -60,6 +60,7 @@ class JobMonitorDaemon < DaemonSpawn::Base
           Notifier.job_pass_rate_too_low(@email_list, job.id ).deliver
         end
         @checked_job_id[job.id] = true
+        puts "[ #{Time.now} ]: Checked Job #{job.id} at #{pass_rate * 100}% pass rate with #{job.num_passed} passed out of #{job.num_tc} test cases."
       end
 
       #@check_time_stmp += @check_interval
