@@ -39,7 +39,7 @@ Ext.define('WardenWeb.controller.test_cases', {
         }
       },
       'test_case_viewer combo[name=search]': {
-        'keydown': function(combo, e, opt) {
+        'keyup': function(combo, e, opt) {
           console.log(e.keyCode);
           if(e.keyCode === 13){
             var filter_text = combo.getValue();
