@@ -21,16 +21,20 @@ class ApplicationController < ActionController::Base
 
   #adding filtering condition to the model passed in, it will return a model
   #with proper conditions imposed
-  def parse_filter_params(model)
+  def parse_filter_params(model, options = {})
+
+    options.reverse_merge({filter_chaining: "OR", filter_type: 'like'})
     filters_params =  ActiveSupport::JSON.decode(params[:filter]) if params[:filter]
+    compare_operator = options[:filter_type] == 'like' ? 'like' : '='
     filters_params ||= []
     condition_str = ''
     condition_values = []
     filters_params.each do |filter_params|
-      condition_str += "#{filter_params['property']} like ? OR "
-      condition_values << "%#{filter_params['value']}%"
+      condition_str += "#{filter_params['property']} #{compare_operator} ? #{options[:filter_chaining]} "
+      filter_value = (compare_operator == 'like') ? "%#{filter_params['value']}%" : filter_params['value']
+      condition_values << filter_value
     end
-    condition_str.sub!(/ OR $/,'')
+    condition_str.sub!(/ #{options[:filter_chaining]} $/,'')
 
     model.where(condition_str, *condition_values )
   end

@@ -7,7 +7,10 @@ class TestCaseController < ApplicationController
   def index
 
     parse_pagenation_and_sorting_params
-    test_case_model = parse_filter_params(TestCase)
+    filter_chaning = params["filter_chaining"].blank? ? 'OR' : params["filter_chaining"]
+    filter_type = params["filter_type"].blank? ? 'like' : params["filter_type"]
+    test_case_model = parse_filter_params(TestCase,
+      filter_chaining: filter_chaning, filter_type: filter_type)
 
     @all_test_cases = test_case_model.includes(:warden_project).limit(@limit).offset(@offset).order(@sort_order).find(:all)
 

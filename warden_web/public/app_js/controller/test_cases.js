@@ -36,19 +36,39 @@ Ext.define('WardenWeb.controller.test_cases', {
       'test_case_folder_viewer': {
         'select': function(smodel, node, index) {
           //alert("selected");
+        },
+        'itemdblclick': function (panel_view, record, index) {
+          //only do filtering when the feature file is double clicked
+          if(record.get('leaf')){
+            var project_name = record.parentNode.get('text');
+            var feature_name = record.get('text');
+            var store = this.getTest_casesStore();
+            var proxy = store.getProxy();
+            proxy.extraParams = { filter_chaining: 'AND', filter_type: 'strict' };
+            store.filter([
+              { property: 'feature_name', value: feature_name},
+              { property: 'warden_projects.name', value: project_name}
+            ]);
+            proxy.extratParams = {};
+            store.filters.clear();
+          }
         }
       },
       'test_case_viewer combo[name=search]': {
         'keyup': function(combo, e, opt) {
-          console.log(e.keyCode);
+          //console.log(e.keyCode);
           if(e.keyCode === 13){
             var filter_text = combo.getValue();
             var store = this.getTest_casesStore();
-            store.filter([
-              { property: 'feature_name', value: filter_text},
-              { property: 'test_cases.name', value: filter_text},
-              { property: 'warden_projects.name', value: filter_text}
-            ]);
+            var proxy = store.getProxy();
+            if (filter_text != ""){
+              proxy.extraParams = { filter_chaining: 'OR', filter_type: 'like' };
+              store.filter([
+                { property: 'feature_name', value: filter_text},
+                { property: 'test_cases.name', value: filter_text},
+                { property: 'warden_projects.name', value: filter_text}
+              ]);
+            }
             store.filters.clear();
           }
         }
