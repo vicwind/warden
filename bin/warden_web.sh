@@ -3,7 +3,7 @@
 sub_cmd=$1; shift
 opt=$1; shift
 
-if [ $WARDEN_WEB_HOME == '' ];then
+if [[ $WARDEN_WEB_HOME == '' ]];then
   echo "Error: WARDEN_WEB_HOME is not set."
   exit 1
 fi
