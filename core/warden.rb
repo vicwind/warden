@@ -223,7 +223,7 @@ module Warden
         image_capture_file_name
       #print FORMATS[:failed].call(screen_capture_url) if scenario.failed? 
 
-      scenario = (scenario.class == Cucumber::Ast::OutlineTable::ExampleRow)? scenario.scenario_outline : scenario
+      scneario_outline = scenario.scenario_outline if scenario.kind_of? Cucumber::Ast::OutlineTable::ExampleRow
 
       if @@scenario_screen_capture.has_key?(scenario)
         @@scenario_screen_capture[scenario].push(screen_capture_url)
@@ -231,7 +231,11 @@ module Warden
         @@scenario_screen_capture[scenario] = []
         @@scenario_screen_capture[scenario].push(screen_capture_url)
       end
-
+      #also store the screen capture under a scneario outline
+      #because 'print_screen_capture_url' will only passed in scneario_ouline object not
+      #the example row obejct
+      @@scenario_screen_capture[scneario_outline] = [] unless @@scenario_screen_capture.has_key?(scneario_outline)
+      @@scenario_screen_capture[scneario_outline].push(screen_capture_url) if scneario_outline
       image_capture_file_name
     end
 

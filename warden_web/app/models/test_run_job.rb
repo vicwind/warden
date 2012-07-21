@@ -27,17 +27,18 @@ class TestRunJob < ActiveRecord::Base
     save!
 
     tc_id_tc_info_ids_pair = create_test_case_run_info(tc_ids) #get_test_case_run_info_ids()
-    enqueue_by_scenario(env_str, tc_id_tc_info_ids_pair)
+    #enqueue_by_scenario(env_str, tc_id_tc_info_ids_pair)
+    enqueue_by_feature(env_str, tc_id_tc_info_ids_pair)
   end
 
   def enqueue_by_scenario(env_str, tc_id_tc_info_ids_pair)
 
     split_arrys = tc_id_tc_info_ids_pair.transpose
     tc_id = split_arrys[0]
-    tc_run_info_id = split_arrys[0]
+    tc_run_info_id = split_arrys[1]
 
     tc_id_tc_info_ids_pair.each do | (tc_id, tc_run_info_id) |
-      run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_id}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_id} 1>/dev/null 2>&1"
+      run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_id}' WARDEN_RUN_MODE='server' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_id} 1>/dev/null 2>&1"
       logger.info "********************Running: #{run_cmd}"
 
       #this line can be abstracted out as to a load balancer method
@@ -45,7 +46,41 @@ class TestRunJob < ActiveRecord::Base
     end
   end
 
+  def enqueue_by_feature(env_str, tc_id_tc_info_ids_pair)
+    split_arrys = tc_id_tc_info_ids_pair.transpose
+    tc_id = split_arrys[0]
+    tc_run_info_id = split_arrys[1]
+
+    batch_tcs = []
+    tcs = TestCase.where(:id => tc_id).order(:warden_project_id, :feature_name)
+
+    previous_tc = tcs.first
+    tcs.each_index do |index|
+      tc = tcs[index]
+      batch_tcs.push(tc.id)
+
+      next_tc = index + 1 == tcs.size ? tc : tcs[index + 1]
+      if tc.warden_project_id != next_tc.warden_project_id or
+         tc.feature_name != next_tc.feature_name or tc == next_tc
+        unless batch_tcs.empty?
+          match_tc_run_info_id = batch_tcs.inject([]) do |match_tc_run_info_id, b_tc|
+            match_tc_run_info_id.push(tc_run_info_id[tc_id.find_index(b_tc)])
+          end
+          logger.info "**************#{batch_tcs.zip(match_tc_run_info_id)}"
+          enqueue_sequential(env_str, batch_tcs.zip(match_tc_run_info_id))
+          batch_tcs.clear
+        end
+      end
+
+      previous_tc = tc
+    end
+
+  end
+
   def enqueue_sequential(env_str, tc_id_tc_info_ids_pair)
+    split_arrys = tc_id_tc_info_ids_pair.transpose
+    tc_ids = split_arrys[0]
+    tc_run_info_ids = split_arrys[1]
 
     run_cmd = "#{env_str} TC_RUN_INFO_IDS='#{tc_run_info_ids.join(',')}' #{ENV['WARDEN_HOME']}/bin/warden.sh run -l #{tc_ids.join(',')} 1>/dev/null 2>&1"
     logger.info "********************Running: #{run_cmd}"

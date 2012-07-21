@@ -22,7 +22,7 @@ World(Warden)
   # include Warden
 # end
 Debugger.settings[:autoeval] = true
-Debugger.settings[:autolist] = 0
+Debugger.settings[:autolist] = 10
 
 # Cleanup log folder before run, this needs to be more
 # sophisticated.
