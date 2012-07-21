@@ -133,30 +133,28 @@ class TestCaseController < ApplicationController
   end
 
   ###################
-  # Integration actions from Ray's project
-  # TODO: This is needed for rewrite
+  # Integration actions from Ray's project trending graph
   ###################
-  # def trend
-  #   @qa_data         = MWarden::calculate_projects_status("qa")
-  #   @staging_data    = MWarden::calculate_projects_status("staging")
-  #   @production_data = MWarden::calculate_projects_status("prd")
-  # end
+  def trend
+    @qa_data         = WardenProject::calculate_projects_status("qa")
+    @staging_data    = WardenProject::calculate_projects_status("staging")
+    @production_data = WardenProject::calculate_projects_status("prd")
+  end
 
-  # def project
-  #   # Make sure id exists
-  #   project_id = params[:id]
+  def project
 
-  #   project = MWarden::Warden_Project.where(:id=>project_id).first
+    # Make sure id exists
+    project_id = params[:id]
+    project = WardenProject.where(:id=>project_id).first
 
-  #   # Gather data about the project
-  #   @project_data = MWarden::calculate_project_status(project_id)
+    # Gather data about the project
 
-  #   project_output_page = "/latest_run/#{project.environment}/#{project.project_name.gsub(' ','_').gsub('.','_')}_#{project.environment}.html"
-
-  #   if File.exists?(File.dirname(__FILE__) + '/public' + project_output_page)
-  #     @project_data["cuke_url"] = "/latest_run/#{project_id}"
-  #   end
-  # end
+    if(!params[:env])
+      @project_data = WardenProject::calculate_project_trend(project_id,"prd")
+    else
+      @project_data = WardenProject::calculate_project_trend(project_id,params[:env])
+    end
+  end
 
   ############END#################
 
