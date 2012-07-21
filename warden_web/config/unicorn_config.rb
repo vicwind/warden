@@ -31,7 +31,7 @@ listen "/tmp/.sock", :backlog => 64
 listen 9000, :tcp_nopush => true
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
-timeout 30
+timeout 120
 
 # feel free to point this anywhere accessible on the filesystem
 pid "#{WARDEN_WEB_HOME}/log/unicorn.pid"
