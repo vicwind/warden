@@ -29,7 +29,7 @@ class WardenProject < ActiveRecord::Base
     failed = []
     temp = {}
 
-    e = (Time.now.midnight - 1.day)..Time.now.midnight
+    e = Time.now.midnight..(Time.now.midnight+1.day)
 
     # Grab id's of todays cron jobs for specified environment
     temp_jobs = TestRunJob.all :joins => :test_case_run_infos, :conditions => {:name=>"daily_cron", :app_environment=>env, :updated_at=>e}
@@ -63,7 +63,7 @@ class WardenProject < ActiveRecord::Base
   # Grab all pass/failures for the trend graph. Optionally you can submit a span length with the
   # default being 1 week.
 
-  def self.calculate_project_trend(project_id, env, span=8)
+  def self.calculate_project_trend(project_id, env, span=7)
 
     temp   = {}
     temp["passed"] = Hash.new(0)
@@ -77,7 +77,7 @@ class WardenProject < ActiveRecord::Base
     temp["id"]      = project_id
 
     # select a date range given the information provided
-    e = (Time.now.midnight - span.day)..Time.now.midnight
+    e = (Time.now.midnight - span.day)..(Time.now.midnight+1.day)
 
     # Check all job id's that occur in that span with 'cron' in the name
     temp_jobs = TestRunJob.all :joins => :test_case_run_infos, :conditions => {:name=>"daily_cron", :app_environment=>env, :updated_at=>e}
