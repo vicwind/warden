@@ -29,7 +29,7 @@ class JobMonitorDaemon < DaemonSpawn::Base
     @checked_job_id = {}
     @need_to_stop = false
     @check_interval =  2# in second
-    @email_list = args.delete_at(0).sub(',', ';')
+    @email_list = args.delete_at(0).gsub(',', ';')
     @job_name =  args[0] ? args.delete_at(0) : ''
     user_specified_start_time = args.delete_at(0)
     @check_time_stmp = user_specified_start_time ? DateTime.parse(user_specified_start_time).to_time : @started_at
