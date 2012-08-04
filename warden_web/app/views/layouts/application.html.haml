@@ -8,10 +8,14 @@
     %title WardenWeb
     = stylesheet_link_tag    "application", :media => "all"
     = stylesheet_link_tag    "/extjs-4.0.7/resources/css/ext-all", :media => "all"
-    = javascript_include_tag "/extjs-4.0.7/ext-dev"
+    = Rails.env == 'production' ? javascript_include_tag("/extjs-4.0.7/ext-all") : javascript_include_tag("/extjs-4.0.7/ext-dev")
     = javascript_include_tag "application"
 
     = csrf_meta_tags
+
+    :javascript
+      Ext.Loader.setConfig({enabled:true});
+      Ext.Loader.setPath('Ext', '../extjs-4.0.7/src');
 %body
   %header.navbar.navbar-fixed-top
     .navbar-inner
