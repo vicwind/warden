@@ -6,7 +6,7 @@
 require 'faraday'
 module WardenWebInterface
 
-  WARDEN_WEB_BASE_URL = "http://localhost:5000"
+  WARDEN_WEB_BASE_URL = "http://localhost:3000"
   class << self
     def connection()
       @connection ||= ""

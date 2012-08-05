@@ -12,9 +12,10 @@ class Notifier < ActionMailer::Base
   default :from => "no-reply@#{`hostname -fs`.strip}.com",
     :return_path => "system@#{`hostname -fs`.strip}.com"
 
-  def job_pass_rate_too_low(email, job_id)
+  def job_pass_rate_too_low(email, job_id, output)
     mail(:to => email, :subject => "[Warning]: Job #{job_id} has less than 80% pass rate") do |format|
-      format.text { render text: "Job URL: http://autoqa.ihicentral.com:3000/test_case_run_info?job_id=#{job_id}"}
+      #format.text { render text: " #{output}"}
+      format.text { output }
     end
   end
 end
@@ -28,7 +29,7 @@ class JobMonitorDaemon < DaemonSpawn::Base
     @started_at = Time.now
     @checked_job_id = {}
     @need_to_stop = false
-    @check_interval =  2# in second
+    @check_interval =  2 # in second
     @email_list = args.delete_at(0).sub(',', ';')
     @job_name =  args[0] ? args.delete_at(0) : ''
     user_specified_start_time = args.delete_at(0)
@@ -55,24 +56,72 @@ class JobMonitorDaemon < DaemonSpawn::Base
         next if @checked_job_id[job.id]
         job.num_passed = 0 unless job.num_passed
         pass_rate = job.num_passed / job.num_tc.to_f
-        if pass_rate < 0.8
+
+        # Wait for at least a 30 second interval before saying it's "Finished" -- prevents premature email
+        if pass_rate < 0.8 && ( ( Time.now - TestRunJob.find(job.id).updated_at ) > 30 )
           puts "[ #{Time.now} ]: Job #{job.id} has pass rate less than 80%, send notification email to #{@email_list}"
-          Notifier.job_pass_rate_too_low(@email_list, job.id ).deliver
+          output = grab_project_statistics(job.id)
+          Notifier.job_pass_rate_too_low(@email_list, job.id, output ).deliver
         end
-        @checked_job_id[job.id] = true
-        puts "[ #{Time.now} ]: Checked Job #{job.id} at #{pass_rate * 100}% pass rate with #{job.num_passed} passed out of #{job.num_tc} test cases."
+
+        # Wait for at least a 30 second interval before saying it's "Finished"
+        if ( ( Time.now - TestRunJob.find(job.id).updated_at ) > 30 )
+          @checked_job_id[job.id] = true 
+          puts "[ #{Time.now} ]: Checked Job #{job.id} at #{pass_rate * 100}% pass rate with #{job.num_passed} passed out of #{job.num_tc} test cases."
+        end
       end
 
       #@check_time_stmp += @check_interval
       sleep @check_interval
       puts "Jobs are checked at #{Time.now}, checking job since #{@check_time_stmp}"
     end
-
+    
   end
 
   def stop
     @need_to_stop = true
   end
+
+  def grab_project_statistics(job_id)
+    pst      = ActiveSupport::TimeZone.new("Pacific Time (US & Canada)")
+    job      = TestRunJob.find(job_id)
+    time     = job.schedule_at.in_time_zone(pst)
+    project_statistics = WardenProject.get_projects_in_job_statistics(job_id)
+
+    passed     = project_statistics[0]
+    queued     = project_statistics[1]
+    failed     = project_statistics[2]
+    failed_tcs = project_statistics[3]
+
+    all_keys = passed.keys + failed.keys
+
+    output = ""
+    output << "=============================================================\n\n"
+    output << "Failure Stats for job '#{job.name}' scheduled on #{time.strftime('%m/%d/%y at %H:%M PST')}\n\n"
+    output << "http://autoqa.ihicentral.com:3000/test_case_run_info?job_id=#{job_id} \n\n"
+    output << "=============================================================\n"
+    output << "\n"
+    output << "Projects: \n"
+    output << "\n"
+
+    all_keys.each { | key |
+      rate = "#{ ( passed[key]*100 / ( passed[key]+failed[key] ) ) }%"
+      output << "#{rate.rjust(4,' ')} Success for #{key}\n" 
+    }
+
+    output << "\n"
+    output << "=============================================================\n\n"
+
+    failed.each { |key, value| 
+      if failed[key] > 0
+        output << "  Failed (#{failed_tcs[key].length}) Testcases for #{key}: \n\n"
+        failed_tcs[key].each { |tc| output << "    #{tc}\n" }
+      end
+    }
+
+    output
+  end
+
 end
 
 JobMonitorDaemon.spawn!({

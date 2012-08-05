@@ -108,6 +108,10 @@ class WardenProject < ActiveRecord::Base
             if job == last_job
               # Grab the Log of the failed testcase
               log = testcase.test_case_run_infos.where(:test_run_job_id=>job).first.test_case_log
+
+              # Add any external data if there any
+              log << "\n #{testcase.test_case_run_infos.where(:test_run_job_id=>job).first.external_data}"
+
               temp["failed_scenarios"].push( log )
             end
         }
@@ -123,6 +127,31 @@ class WardenProject < ActiveRecord::Base
     end
 
     temp
+  end
+
+  def self.get_projects_in_job_statistics(job_id)
+    @project_passed_status = Hash.new(0)
+    @project_failed_status = Hash.new(0)
+    @project_queued_status = Hash.new(0)
+    @project_failed_tcs    = Hash.new([])
+
+    @sort_order = 'created_at DESC'
+
+    TestRunJob.find(job_id).test_case_run_infos.each do |tc_run_info|
+      project = TestCase.find(tc_run_info.test_case_id).warden_project.name
+      if tc_run_info.status == "Passed"
+        @project_passed_status[project] += 1
+      elsif tc_run_info.status == 'Queued'
+        @project_queued_status[project] += 1
+      elsif tc_run_info.status == 'Failed'
+        tc_name = "#{TestCase.find(tc_run_info.test_case_id).feature_name} : #{TestCase.find(tc_run_info.test_case_id).name}" 
+        @project_failed_tcs[project].push(tc_name)
+        @project_failed_status[project] += 1
+      end
+    end
+
+    # Setup output 
+    [ @project_passed_status, @project_queued_status, @project_failed_status, @project_failed_tcs, ]
   end
 
 end

@@ -54,6 +54,9 @@ Sauce.config do |config|
 end
 
 Before do |scenario|
+
+  ENV[ "WARDEN_TEST_TARGET_ENV" ] = "prd" if ENV[ "WARDEN_TEST_TARGET_ENV" ] == nil
+
   #browser.open()
   @warden_session = Warden::Warden_Session.new(scenario)
   #make feature data avaiable in steps
