@@ -11,6 +11,7 @@ module Warden
   SCREEN_CAPTURE_SERVER = "http://#{`hostname`.strip}:8080/screen-capture"
   APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
   PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
+  ILLEGALC = /[^\w `#`~!@''\$%&\(\)_\-\+=\[\]\{\};,\.]/ #used to sanitize the file name
 
   class << self
     def step_detail
@@ -77,6 +78,8 @@ module Warden
     unless Dir.exist?( image_capture_project_path )
       Dir.mkdir( image_capture_project_path )
     end
+
+    image_capture_file_name.gsub!(ILLEGALC, '_')
     file_path = "#{image_capture_project_path}/#{image_capture_file_name}"
 
     File.open(file_path,'wb') do |f|
