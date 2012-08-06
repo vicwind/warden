@@ -26,9 +26,6 @@ When /^Change to default test target environment for the test application$/ do
 
   Warden.add_test_target_detail(step_detail)
   visit("/")
-
-  puts "Capybara App Host"
-  puts Capybara.app_host
 end
 
 Given /^[T|t]he user has changed to the default test target environment for the test application$/ do
@@ -47,11 +44,8 @@ Given /^user is using page objects to access the default test target environment
    Capybara.app_host = Warden::APP_ENV[ ENV[ "WARDEN_TEST_TARGET_ENV" ] ][ ENV["WARDEN_TEST_TARGET_NAME"] ]
   page_name = ENV[ "WARDEN_TEST_TARGET_NAME" ]
 
-  puts "#{ Warden::PAGE_OBJECTS[page_name] }"
   page_class = Object.const_get("#{ Warden::PAGE_OBJECTS[page_name] }")
-  
-  #puts "Page Class: #{page_class}"
-  
+    
   step_detail = "Target environment '#{ENV[ "WARDEN_TEST_TARGET_ENV" ] }' ,"+
     "test application '#{ENV["WARDEN_TEST_TARGET_NAME"] }'"
   step_detail += " with locale '#{ENV["WARDEN_TEST_TARGET_LOCALE"]}'" if ENV["WARDEN_TEST_TARGET_LOCALE"]
