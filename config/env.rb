@@ -55,7 +55,7 @@ end
 
 Before do |scenario|
 
-  ENV[ "WARDEN_TEST_TARGET_ENV" ] = "prd" if ENV[ "WARDEN_TEST_TARGET_ENV" ] == nil
+  ENV[ "WARDEN_TEST_TARGET_ENV" ] = "prd" if ENV[ "WARDEN_TEST_TARGET_ENV" ].nil?
 
   #browser.open()
   @warden_session = Warden::Warden_Session.new(scenario)

@@ -41,7 +41,7 @@ end
 # end
 
 Given /^user is using page objects to access the default test target environment for the test application$/ do
-   Capybara.app_host = Warden::APP_ENV[ ENV[ "WARDEN_TEST_TARGET_ENV" ] ][ ENV["WARDEN_TEST_TARGET_NAME"] ]
+  Capybara.app_host = Warden::APP_ENV[ ENV[ "WARDEN_TEST_TARGET_ENV" ] ][ ENV["WARDEN_TEST_TARGET_NAME"] ]
   page_name = ENV[ "WARDEN_TEST_TARGET_NAME" ]
 
   page_class = Object.const_get("#{ Warden::PAGE_OBJECTS[page_name] }")
