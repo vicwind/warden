@@ -201,8 +201,11 @@ class YAMLStoreTestCaseManager < AbstractTestCaseManager
   #save the test case map to the yaml file, it will back up the old one
   #and save the memeory version of the map to a file
   def save_yml_test_case_map()
-    FileUtils.mv(self.class.test_case_map_path, self.class.test_case_map_path + ".tmp_bak")
-    File.open(self.class.test_case_map_path, "w:UTF-8"){ |file| file.puts(@tc_id_map.to_yaml)} if @tc_id_map
+    new_test_case_map_path = self.class.test_case_map_path + '.new'
+    yaml_content = @tc_id_map.to_yaml
+    File.open(new_test_case_map_path, "w:UTF-8"){ |file| file.write(yaml_content) } if yaml_content
+    FileUtils.mv(self.class.test_case_map_path, self.class.test_case_map_path + ".bak")
+    FileUtils.mv(new_test_case_map_path, self.class.test_case_map_path)
   end
 
   #find all of the project name exists in store
