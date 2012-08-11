@@ -1,8 +1,71 @@
 ---
 app_environment:
   prd:
-    'amazon': http://www.amazon.com/
+    'BB.ca Web BG': http://bg2011.ihvweb.com/bg/init/?inst_id=217&impl_id=300&locale=en_us&bitly=false # the key is the application mame
+    'BB.ca Web FR BG': http://bg2011.ihvweb.com/bg/init/?inst_id=218&impl_id=301&locale=fr_CA&bitly=false
+    'BB.ca Mobile EN BG' : http://engageengine.ihvweb6.com/bgmw/#Guide/index/217/302 
+    'BB.ca Mobile FR BG' : http://engageengine.ihvweb6.com/bgmw/#Guide/index/218/303 
+    'bb_buying_guide': http://bg2011.ihvweb.com/bg/init/?inst_id=217&impl_id=300&locale=en_US&bitly=false
+    'Dell BG': http://bg2011.ihvweb.com/bg/init/?inst_id=216&impl_id=304&sub_theme_id=sub_theme_dell_2011&bitly=false
+    'ATT Web BG' : http://bg2011.ihvweb.com/bg/init/?inst_id=225&impl_id=307&locale=en_US&sub_theme_id=sub_theme_att_2011&bitly=false
+    'Costco BG' : http://bg2011.ihvweb.com/bg/init/?inst_id=228&impl_id=315&locale=en_US&sub_theme_id=sub_theme_costco_2011&bitly=false
+    'OfficeMax BG' : http://bg2011.ihvweb.com/bg/init/?inst_id=229&impl_id=316&locale=en_US&sub_theme_id=sub_theme_officemax_2011&bitly=false
+    'Toshiba Laptops EN BG' : http://bg2011.ihvweb.com/bg/init/?inst_id=222&impl_id=305&locale=en_US&sub_theme_id=sub_theme_toshiba_2011&bitly=false
+    'Toshiba Laptops FR BG' : http://bg2011.ihvweb.com/bg/init/?inst_id=223&impl_id=306&locale=fr_CA&sub_theme_id=sub_theme_toshiba_2011&bitly=false
+    'Toshiba Laptops Mobile EN BG' : http://engageengine.ihvweb6.com/bgmwtl/#Guide/index/222/311&bitly=false
+    'Toshiba Laptops Mobile FR BG' : http://engageengine.ihvweb6.com/bgmwtl/#Guide/index/223/312&bitly=false
+    'Toshiba TV Web EN BG' : http://bg2011.ihvweb.com/bg/init/?inst_id=226&impl_id=309&locale=en_US&sub_theme_id=sub_theme_toshiba_tv_2011&bitly=false
+    'Toshiba TV Web FR BG' : http://bg2011.ihvweb.com/bg/init/?inst_id=227&impl_id=310&locale=fr_CA&sub_theme_id=sub_theme_toshiba_tv_2011&bitly=false
+    'Toshiba TV Mobile EN BG' : http://engageengine.ihvweb6.com/bgmwtv/#Guide/index/226/313
+    'Toshiba TV Mobile FR BG' : http://engageengine.ihvweb6.com/bgmwtv/#Guide/index/227/314
+    'OfficeMax Showcase' : http://showcase.ihvweb.com/officemax
+    'BestBuy Showcase' : http://showcase.ihvweb.com/bestbuy
+    'HP Buying Guide': http://hp.com/buing_guide
+    'Generic Web BG': http://bg2011.ihvweb.com/bg/init/?inst_id=230&impl_id=318&locale=en_US&sub_theme_id=sub_theme_generic&bitly=false 
+    'ISA' : http://intelsalesadvisor.com/
+    'AppUp' : http://appupshowcase.ihvweb8.com/v3/staples
+    'AppUp Staples' : http://appupshowcase.ihvweb8.com/v3/staples
+    'AppUp Sprint' : http://appupshowcase.ihvweb8.com/v3/sprint
+    'AppUp BB.ca' : http://appupshowcase.ihvweb8.com/v3/bestbuy-ca
+    'AppUp BB' : http://appupshowcase.ihvweb8.com/v3/bestbuy
+    'AppUp Croma' : http://appupshowcase.ihvweb8.com/v3/croma
+    'AppUp Datavision' : http://appupshowcase.ihvweb8.com/v3/datavision
+    'AppUp Dixons' : http://appupshowcase.ihvweb8.com/v3/dixons
+    'AppUp Fujitsu' : http://appupshowcase.ihvweb8.com/v3/fujitsu-americas
+    'AppUp Future Shop' : http://appupshowcase.ihvweb8.com/v3/futureshop
+    'AppUp HSN' : http://appupshowcase.ihvweb8.com/v3/hsn
+    'AppUp Newegg' : http://appupshowcase.ihvweb8.com/v3/newegg
+    'AppUp RCO' : http://appupshowcase.ihvweb8.com/v3/rco
+    'AppUp RCOM Reliance' : http://appupshowcase.ihvweb8.com/v3/rcom-reliance
+    'AppUp RCS' : http://appupshowcase.ihvweb8.com/v3/rcs
+    'Sony Vita' : http://showcase.ihvweb.com/sony-vita
+  qa:
+    'BB.ca Web BG': http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=217&impl_id=300&locale=en_US&bitly=false
+    'BB.ca Web FR BG': http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=218&impl_id=301&locale=fr_CA&bitly=false
+    'Dell BG': http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=216&impl_id=304&sub_theme_id=sub_theme_dell_2011&bitly=false
+    'ATT Web BG' : http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=225&impl_id=307&locale=en_US&sub_theme_id=sub_theme_att_2011&bitly=false
+    'Costco BG' : http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=228&impl_id=315&locale=en_US&sub_theme_id=sub_theme_costco_2011&bitly=false
+    'OfficeMax BG' : http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=229&impl_id=316&locale=en_US&sub_theme_id=sub_theme_officemax_2011&bitly=false
+    'Toshiba Laptops EN BG' : http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=222&impl_id=305&locale=en_US&sub_theme_id=sub_theme_toshiba_2011&bitly=false
+    'Toshiba Laptops FR BG' : http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=223&impl_id=306&locale=fr_CA&sub_theme_id=sub_theme_toshiba_2011&bitly=false
+    'Toshiba TV Web EN BG' : http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=226&impl_id=309&locale=en_US&sub_theme_id=sub_theme_toshiba_tv_2011&bitly=false
+    'Toshiba TV Web FR BG' : http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=227&impl_id=310&locale=fr_CA&sub_theme_id=sub_theme_toshiba_tv_2011&bitly=false
+    'ISA' : http://qa.intelsalesadvisor.com/
   staging:
-    'test-app': http://staging.mysite.com
+    'BB.ca Web BG': bg/init/?inst_id=217&impl_id=300&locale=en_US&bitly=false
+    'BB.ca Web FR BG': bg/init/?inst_id=218&impl_id=301&locale=fr_CA&bitly=false
+    'Dell BG': bg/init/?inst_id=216&impl_id=304&sub_theme_id=sub_theme_dell_2011&bitly=false
+    'ATT Web BG' : bg/init/?inst_id=225&impl_id=307&locale=en_US&sub_theme_id=sub_theme_att_2011&bitly=false
+    'Costco BG' : bg/init/?inst_id=228&impl_id=315&locale=en_US&sub_theme_id=sub_theme_costco_2011&bitly=false
+    'OfficeMax BG' : bg/init/?inst_id=229&impl_id=316&locale=en_US&sub_theme_id=sub_theme_officemax_2011&bitly=false
+    'Toshiba Laptops EN BG' : bg/init/?inst_id=222&impl_id=305&locale=en_US&sub_theme_id=sub_theme_toshiba_2011&bitly=false
+    'Toshiba Laptops FR BG' : bg/init/?inst_id=223&impl_id=306&locale=fr_CA&sub_theme_id=sub_theme_toshiba_2011&bitly=false
+    'Toshiba TV Web EN BG' : bg/init/?inst_id=226&impl_id=309&locale=en_US&sub_theme_id=sub_theme_toshiba_tv_2011&bitly=false
+    'Toshiba TV Web FR BG' : bg/init/?inst_id=227&impl_id=310&locale=fr_CA&sub_theme_id=sub_theme_toshiba_tv_2011&bitly=false
+    'ISA' : http://staging.intelsalesadvisor.com/
   development:
-    'dev_site': http://localhost:3000/my_site
+    'BB.ca Web BG': some url
+    'HP Buying Guide': http://dev12.hp.com/buing_guide
+    'climate' : http://localhost:3000/risk_reports
+    'twain' : http://localhost:3000
+    

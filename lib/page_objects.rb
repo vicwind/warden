@@ -37,7 +37,9 @@
   #########################################
 
   require "#{File.dirname(__FILE__)}/page_objects/buying_guide_interface"
+  require "#{File.dirname(__FILE__)}/page_objects/buying_guide_mobile_interface"
   require "#{File.dirname(__FILE__)}/page_objects/buying_guide_page"  
+  require "#{File.dirname(__FILE__)}/page_objects/buying_guide_mobile_page"  
 
 #########################################
 #  Include custom instances             # 
@@ -48,7 +50,4 @@
   # Buying Guide instanace files          #
   #########################################
   
-  require "#{File.dirname(__FILE__)}/page_objects/instances/best_buy_canada_page"
-  require "#{File.dirname(__FILE__)}/page_objects/instances/toshiba_page"
-  require "#{File.dirname(__FILE__)}/page_objects/instances/dell_page"
-  require "#{File.dirname(__FILE__)}/page_objects/instances/att_page"
+  Dir["#{File.dirname(__FILE__)}/page_objects/instances/*.rb"].each {|file| require file }
