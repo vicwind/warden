@@ -23,6 +23,22 @@ app_environment:
     'HP Buying Guide': http://hp.com/buing_guide
     'Generic Web BG': http://bg2011.ihvweb.com/bg/init/?inst_id=230&impl_id=318&locale=en_US&sub_theme_id=sub_theme_generic&bitly=false 
     'ISA' : http://intelsalesadvisor.com/
+    'AppUp' : http://appupshowcase.ihvweb8.com/v3/staples
+    'AppUp Staples' : http://appupshowcase.ihvweb8.com/v3/staples
+    'AppUp Sprint' : http://appupshowcase.ihvweb8.com/v3/sprint
+    'AppUp BB.ca' : http://appupshowcase.ihvweb8.com/v3/bestbuy-ca
+    'AppUp BB' : http://appupshowcase.ihvweb8.com/v3/bestbuy
+    'AppUp Croma' : http://appupshowcase.ihvweb8.com/v3/croma
+    'AppUp Datavision' : http://appupshowcase.ihvweb8.com/v3/datavision
+    'AppUp Dixons' : http://appupshowcase.ihvweb8.com/v3/dixons
+    'AppUp Fujitsu' : http://appupshowcase.ihvweb8.com/v3/fujitsu-americas
+    'AppUp Future Shop' : http://appupshowcase.ihvweb8.com/v3/futureshop
+    'AppUp HSN' : http://appupshowcase.ihvweb8.com/v3/hsn
+    'AppUp Newegg' : http://appupshowcase.ihvweb8.com/v3/newegg
+    'AppUp RCO' : http://appupshowcase.ihvweb8.com/v3/rco
+    'AppUp RCOM Reliance' : http://appupshowcase.ihvweb8.com/v3/rcom-reliance
+    'AppUp RCS' : http://appupshowcase.ihvweb8.com/v3/rcs
+    'Sony Vita' : http://showcase.ihvweb.com/sony-vita
   qa:
     'BB.ca Web BG': http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=217&impl_id=300&locale=en_US&bitly=false
     'BB.ca Web FR BG': http://bg2011-qa.ihidevelopment.com/bg/init/?inst_id=218&impl_id=301&locale=fr_CA&bitly=false
