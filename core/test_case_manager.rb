@@ -1,4 +1,6 @@
 require 'yaml'
+YAML::ENGINE.yamler = 'psych' #force to use the newer yaml engine
+
 #Provied the basic interface and tools needed to implment a real Test Case Manager
 #most of the methods in this class need to be imlpemented in the sub-calss
 
