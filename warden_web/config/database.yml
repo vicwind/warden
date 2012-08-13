@@ -8,16 +8,16 @@ development:
   encoding: utf8
   reconnect: true
   database: warden
-  username: warden
-  password: warden-p
+  username: wb-db
+  password: wb-db
 
 mwarden_db:
   adapter: mysql2
   encoding: utf8
   reconnect: true
-  database: warden
-  username: warden
-  password: warden-p
+  database: mwarden
+  username: wb-db
+  password: wb-db
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -27,13 +27,13 @@ test:
   encoding: utf8
   reconnect: true
   database: warden_test
-  username: warden
-  password: warden-p
+  username: wb-db
+  password: wb-db
 
 production:
   adapter: mysql2
   encoding: utf8
   reconnect: true
   database: warden_prod
-  username: warden
-  password: warden-p
+  username: wb-db
+  password: wb-db
