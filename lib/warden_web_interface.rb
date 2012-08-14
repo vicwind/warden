@@ -6,7 +6,7 @@
 require 'faraday'
 module WardenWebInterface
 
-  WARDEN_WEB_BASE_URL = "http://localhost:5000"
+  WARDEN_WEB_BASE_URL = "http://localhost:3000"
   class << self
     def connection()
       @connection ||= ""
@@ -84,7 +84,8 @@ module WardenWebInterface
   end
 
   def self.read_log_from_buffer()
-    log_buffer.delete_at(0)
+    log = log_buffer.delete_at(0)
+    log.nil? ? "" : log
   end
 
 end
