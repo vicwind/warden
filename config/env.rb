@@ -91,7 +91,7 @@ if ENV['TC_RUN_INFO_IDS'] and !ENV['TC_RUN_INFO_IDS'].empty?
         exeception_msg += scenario.exception.backtrace.join("\n")
       end
 
-      current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg
+      current_scenario_log = "#{WardenWebInterface.read_log_from_buffer} #{exeception_msg}"
       WardenWebInterface.update_test_case_run_info(current_tc_run_info_id,{
         :status => status,
         :test_case_log => current_scenario_log,
