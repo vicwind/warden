@@ -108,7 +108,7 @@ class TestRunJob < ActiveRecord::Base
   def create_test_case_run_info(tc_ids)
     tc_id_tc_info_ids_pair = []
 
-    test_cases = TestCase.find(tc_ids)
+    test_cases = TestCase.find_all_by_tc_id(tc_ids)
 
     test_cases.each do |tc|
       test_case_info = TestCaseRunInfo.create({
