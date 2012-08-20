@@ -155,9 +155,11 @@ module Warden
         Warden.test_case_manager.
           register_scenario(current_project_name, @current_scenario)
       end
+
+      @extra_log = [] #this array will store additional log message, and it will print out at the end of each senario
     end
 
-    attr_accessor :current_scenario, :current_feature, :external_data
+    attr_accessor :current_scenario, :current_feature, :external_data, :extra_log
 
 
     def scenario_name
@@ -294,6 +296,10 @@ module Warden
         end
       end
       links_data
+    end
+
+    def puts_extra_log(log_msg)
+      @extra_log.push("#{Time.now} [log]: #{log_msg}")
     end
 
     ########################

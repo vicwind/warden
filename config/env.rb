@@ -24,7 +24,7 @@ World(Warden)
   # include Warden
 # end
 Debugger.settings[:autoeval] = true
-Debugger.settings[:autolist] = 10
+Debugger.settings[:autolist] = 1
 
 # Cleanup log folder before run, this needs to be more
 # sophisticated.
@@ -88,7 +88,8 @@ if ENV['TC_RUN_INFO_IDS'] and !ENV['TC_RUN_INFO_IDS'].empty?
       end
 
       #current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg #differnet way to getting cucumber log
-      current_scenario_log = "#{WardenWebInterface::log_io.print_io_content}\n #{exeception_msg}"
+      current_scenario_log = "#{WardenWebInterface::log_io.print_io_content} \n#{exeception_msg}"
+      current_scenario_log += "Extra Log: \n#{@warden_session.extra_log.join("\n")}\n" unless @warden_session.extra_log.empty?
 
       tc_run_info = {
         :status => status,
@@ -110,6 +111,12 @@ end
 After do |scenario|
   begin
     @warden_session.capture_screen_shot()# if scenario.failed?
+
+    unless @warden_session.extra_log.empty?
+      print "\nExtra log: \n"
+      print @warden_session.extra_log.join("\n")
+      print "\n"
+    end
 
     if scenario.failed? and Warden::Config::debug_mode
       print "\nYou are in ruby debug mode.\n"
