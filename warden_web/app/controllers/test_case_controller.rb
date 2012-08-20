@@ -115,7 +115,12 @@ class TestCaseController < ApplicationController
 
     #lanuch and run the job
     new_test_job.run(tc_ids)
-    render :text=>"Good to Go!"
+
+    response_data ={ msg: 'Good to Go', data: { new_test_job_id: new_test_job.id } }
+
+    respond_to do |format|
+      format.json { render :json => response_data.to_json }
+    end
   end
 
   def test_case_search_suguession

@@ -130,7 +130,7 @@ Ext.define('WardenWeb.controller.test_cases', {
     }
 
     Ext.Ajax.request({
-      url: '/test_case/run_test_job',
+      url: '/test_case/run_test_job.json',
       params: {
         "tc_ids[]": tc_ids,
         suite_file_path: suite_file_path,
@@ -138,8 +138,11 @@ Ext.define('WardenWeb.controller.test_cases', {
         job_name: job_name,
       },
       success: function(response){
-        var text = response.responseText;
-        Ext.Msg.alert("Status:", msg)
+        var response_data = Ext.JSON.decode(response.responseText);
+        var job_id = response_data.data.new_test_job_id;
+        test_run_job_link = "<a href='/test_case_run_info?job_id=" + job_id +
+          "' target='_blank' >View Job Detail</a>";
+        Ext.Msg.alert("Status:", msg + '&nbsp;&nbsp;' + test_run_job_link);
         // process server response here
       },
       failure: function(response){
