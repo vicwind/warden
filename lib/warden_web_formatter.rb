@@ -5,6 +5,7 @@ require 'gherkin/formatter/escaping'
 require 'stringio'
 require "#{ENV['WARDEN_HOME']}/lib/warden_web_interface"
 
+
 module Cucumber
   module Formatter
     # The formatter used for <tt>--format pretty</tt> (the default formatter).
@@ -14,7 +15,48 @@ module Cucumber
     #
     # If the output is STDOUT (and not a file), there are bright colours to watch too.
     #
-    class WardenWebPretty
+
+    ##This class is used to multi-plex the IO pass-in. It will support 'puts' and 'print' method
+    ##of the passed-in IO and duplicated the stream into a stringIO object.
+    ##the content of the IO can be fetched by calling 'print_io_content'
+
+    class SplitIO < StringIO
+      def initialize(io)
+        @io = io
+        super()
+      end
+
+      def puts(*arg)
+        super
+        @io.puts(arg)
+      end
+
+      def print(*arg)
+        super
+        @io.print(arg)
+      end
+
+      def print_io_content
+        ori_pos = pos
+        rewind
+        content = read
+        pos = ori_pos
+        content
+      end
+
+      # def flush
+      #   @io.flush
+      # end
+
+      # def color_switch(&block)
+      #   ori_option = Term::ANSIColor.coloring?
+      #   Term::ANSIColor.coloring = false
+      #   yield block
+      #   Term::ANSIColor.coloring = ori_option
+      # end
+    end
+
+    class WardenWebPretty < CucumberFormatter::Debug
       include FileUtils
       include Console
       include Io
@@ -29,7 +71,8 @@ module Cucumber
         @prefixes = options[:prefixes] || {}
         @delayed_messages = []
         @scenario_log = []
-        @str_io = StringIO.new()
+        @io = SplitIO.new(@io)
+        WardenWebInterface::log_io = @io
       end
 
       def after_features(features)
