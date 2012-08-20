@@ -30,7 +30,13 @@ Ext.define('WardenWeb.controller.test_case_run_info', {
   },
   load_test_case_run_infos: function(grid) {
     url_params = Ext.Object.fromQueryString(window.location.search);
-    grid.store.load({ params : url_params });
+    grid.store.load({
+      params: {limit: 0},  // Workaround until 4.1 is available,  make loadmask show up while loading
+      scope: grid.getStore(),
+      callback: function() {
+        this.load({ params : url_params });
+      }
+    });
   }
 
 });

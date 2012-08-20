@@ -21,6 +21,12 @@ Ext.define('WardenWeb.controller.test_run_job', {
 
   //instance methods of the object
   load_test_run_jobs: function(grid) {
-    grid.store.load();
+    grid.store.load({
+      params: {limit: 0},  // Workaround until 4.1 is available,  make loadmask show up while loading
+      scope: grid.getStore(),
+      callback: function() {
+        this.load();
+      }
+    });
   }
 });
