@@ -87,7 +87,8 @@ if ENV['TC_RUN_INFO_IDS'] and !ENV['TC_RUN_INFO_IDS'].empty?
         exeception_msg += scenario.exception.backtrace.join("\n")
       end
 
-      current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg
+      #current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg #differnet way to getting cucumber log
+      current_scenario_log = "#{WardenWebInterface::log_io.print_io_content}\n #{exeception_msg}"
 
       tc_run_info = {
         :status => status,
