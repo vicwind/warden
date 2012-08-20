@@ -4,15 +4,22 @@ class TestRunJobController < ApplicationController
   respond_to :html, :xml, :json, :js
 
   def index
-    # parse_pagenation_and_sorting_params
-    # @sort_order = @sort_order.empty? ? 'created_at DESC' : @sort_order
+    if request.xhr?
+      parse_pagenation_and_sorting_params
+      @sort_order = @sort_order.empty? ? 'created_at DESC' : @sort_order
 
-    # @all_test_run_job = TestRunJob.limit(@limit).offset(@offset).order(@sort_order).find(:all)
+      @all_test_run_job = TestRunJob.limit(@limit).offset(@offset).order(@sort_order).find(:all)
+      @total = TestRunJob.count
+    end
 
-    # respond_with({
-    #   collection: @all_test_run_job,
-    #   total: TestRunJob.count
-    # })
+    respond_to do |format|
+      format.html
+      format.json { render :json => {
+          collection: @all_test_cases_info,
+          total: @total
+        }
+      }
+    end
   end
 
   def get_test_run_job_with_tc_info
@@ -20,7 +27,7 @@ class TestRunJobController < ApplicationController
 
     @sort_order = @sort_order.empty? ? 'created_at DESC' : @sort_order
 
-    @all_test_run_job = TestRunJob.includes(:test_case_run_infos).limit(@limit).offset(@offset).order(@sort_order).order(@sort_order).
+    @all_test_run_job = TestRunJob.includes(:test_case_run_infos).limit(@limit).offset(@offset).order(@sort_order).
       find(:all).collect do |job|
         number_of_passed = 0
         number_of_failed = 0

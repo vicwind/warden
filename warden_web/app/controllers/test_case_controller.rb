@@ -5,16 +5,17 @@ class TestCaseController < ApplicationController
   respond_to :html, :xml, :json, :js
 
   def index
+    if request.xhr?
+      parse_pagenation_and_sorting_params
+      filter_chaning = params["filter_chaining"].blank? ? 'OR' : params["filter_chaining"]
+      filter_type = params["filter_type"].blank? ? 'like' : params["filter_type"]
+      test_case_model = parse_filter_params(TestCase,
+        filter_chaining: filter_chaning, filter_type: filter_type)
 
-    parse_pagenation_and_sorting_params
-    filter_chaning = params["filter_chaining"].blank? ? 'OR' : params["filter_chaining"]
-    filter_type = params["filter_type"].blank? ? 'like' : params["filter_type"]
-    test_case_model = parse_filter_params(TestCase,
-      filter_chaining: filter_chaning, filter_type: filter_type)
+      @all_test_cases = test_case_model.includes(:warden_project).limit(@limit).offset(@offset).order(@sort_order).find(:all)
 
-    @all_test_cases = test_case_model.includes(:warden_project).limit(@limit).offset(@offset).order(@sort_order).find(:all)
-
-    @total_size = test_case_model.includes(:warden_project).count
+      @total_size = test_case_model.includes(:warden_project).count
+    end
 
     respond_to do |format|
       format.html

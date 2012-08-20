@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   #adding filtering condition to the model passed in, it will return a model
-  #with proper conditions imposed
+  #with proper conditions imposee
   def parse_filter_params(model, options = {})
 
     options.reverse_merge({filter_chaining: "OR", filter_type: 'like'})

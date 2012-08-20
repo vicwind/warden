@@ -2,20 +2,23 @@ class TestCaseRunInfoController < ApplicationController
   respond_to :html, :xml, :json, :js
 
   def index
-    # @all_test_cases_info =
-    #   TestCaseRunInfo.includes({:test_case => :warden_project}, :test_run_history).find(:all)
+    if request.xhr?
+      @limit = params[:limit] || 10
+      @all_test_cases_info =
+        TestCaseRunInfo.includes({:test_case => :warden_project}, :test_run_history).limit(@limit)
+    end
 
-    # respond_to do |format|
-    #   format.html
-    #   format.json { render :json => @all_test_cases_info.
-    #     to_json(:include => {
-    #       :test_case => {
-    #         :include => {:warden_project => {}}
-    #       },
-    #       :test_run_history => {}
-    #     })
-    #   }
-    # end
+    respond_to do |format|
+      format.html
+      format.json { render :json => @all_test_cases_info.
+        to_json(:include => {
+          :test_case => {
+            :include => {:warden_project => {}}
+          },
+          :test_run_history => {}
+        })
+      }
+    end
   end
 
   def update
