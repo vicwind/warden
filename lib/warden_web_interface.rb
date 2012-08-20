@@ -4,16 +4,28 @@
 #################################
 #
 require 'faraday'
+require "#{ENV['WARDEN_CONFIG_DIR']}/config"
+
 module WardenWebInterface
 
-  WARDEN_WEB_BASE_URL = "http://localhost:5000"
+  WARDEN_WEB_BASE_URL = Warden::Config::WEB_BASE_URL
+
   class << self
+
     def connection()
       @connection ||= ""
     end
 
     def log_buffer()
       @log_buffer ||= []
+    end
+
+    def log_io
+      @log_io
+    end
+
+    def log_io=(io)
+      @log_io = io
     end
   end
 

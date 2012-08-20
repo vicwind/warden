@@ -1,4 +1,6 @@
 module Warden
+  require "#{ENV['WARDEN_CONFIG_DIR']}/config"
+
   require 'yaml'
   require 'capybara/cucumber'
   require 'ostruct' #provids dot access to hash value
@@ -6,11 +8,8 @@ module Warden
   require 'test_case_manager'
 
   include Capybara::DSL
+  include Config
 
-  SCREEN_CAPTURE_DIR = "#{ENV["WARDEN_HOME"]}/screen-capture"
-  SCREEN_CAPTURE_SERVER = "http://#{`hostname`.strip}:8080/screen-capture"
-  APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
-  PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
   ILLEGALC = /[^\w `#`~!@''\$%&\(\)_\-\+=\[\]\{\};,\.]/ #used to sanitize the file name
 
   class << self
@@ -58,7 +57,7 @@ module Warden
   end
 
   def current_project_name
-    ENV["WARDEN_TEST_TARGET_NAME"]
+    Config::test_target_name
   end
 
   def current_feature_name
@@ -72,8 +71,8 @@ module Warden
   #uses capybara's page driver to do screen capturing
   def embed_screenshot( image_capture_file_name )
     #%x(scrot #{$ROOT_PATH}/images/#{id}.png)
-    project_name = ENV["WARDEN_TEST_TARGET_NAME"]
-    image_capture_project_path = "#{SCREEN_CAPTURE_DIR}/#{project_name}"
+    project_name = Config::test_target_name
+    image_capture_project_path = "#{Config::SCREEN_CAPTURE_DIR}/#{project_name}"
 
     unless Dir.exist?( image_capture_project_path )
       Dir.mkdir( image_capture_project_path )
@@ -98,14 +97,14 @@ module Warden
   #####################
   #
   #It will return the project path base on ENV['WARDEN_PROJECT_PATH'] if it exists,
-  #otherwise it will return the project path base on ENV['WARDEN_TEST_TARGET_NAME']
+  #otherwise it will return the project path base on Warden::Config::test_target_name
   #return the absolute path to the current project
   def self.project_path
     project_path = "#{Warden::projects_root_path()}/#{ENV['WARDEN_PROJECT_DIR_NAME']}"
     if ENV["WARDEN_PROJECT_DIR_NAME"] and Dir.exists? project_path
       ENV["WARDEN_PROJECT_DIR_NAME"]
     else
-      "#{Warden::projects_root_path()}/#{ENV['WARDEN_TEST_TARGET_NAME']}"
+      "#{Warden::projects_root_path()}/#{Warden::Config::test_target_name}"
     end
   end
 
@@ -123,6 +122,7 @@ module Warden
   #used to store state during the cucumber feature execution
   class Warden_Session
     include Warden
+    include Config
 
     #the key is the scenario, the value is an array of screen capture URL or fiel path
     @@scenario_screen_capture = {}
@@ -142,17 +142,16 @@ module Warden
 
       #load the pkg's locale dictionary yaml if the projct uses a pkg features and there is a
       #./etc/locale.yml file
-      add_i18n_dictionary(ENV['WARDEN_PKG_FEATURES_TEMP_PATH'] +
-                          "/etc/locale.yml") if ENV['WARDEN_PKG_FEATURES_TEMP_PATH']
+      add_i18n_dictionary(Warden::Config::pkg_features_temp_path +
+                          "/etc/locale.yml") if Warden::Config::pkg_features_temp_path
       #load the locale dictionary from yaml
       @project_local_path = project_path() + "/etc/locale.yml"
       add_i18n_dictionary(@project_local_path)
 
-      set_locale(ENV["WARDEN_TEST_TARGET_LOCALE"]) if ENV["WARDEN_TEST_TARGET_LOCALE"]
+      set_locale(Config::test_target_locale) if Config::test_target_locale
 
       #register the scenario to test case manager
-      if ENV['WARDEN_ENABLE_TEST_CASE_REGISTRATION'] and
-        ENV['WARDEN_ENABLE_TEST_CASE_REGISTRATION'] == "1"
+      if Warden::Config::ENABLE_TEST_CASE_REGISTRATION
         Warden.test_case_manager.
           register_scenario(current_project_name, @current_scenario)
       end
@@ -216,13 +215,13 @@ module Warden
 
       image_capture_file_name = "#{feature_name}-#{scenario.name.gsub(/[ \.'"\?]/,'_')}" + 
       "-#{Time.now.strftime("%m%d%Y_%H%M%S")}.jpg"
-      image_capture_file_name = ( prefix != '' )? prefix + "-" + 
+      image_capture_file_name = ( prefix != '' )? prefix + "-" +
         image_capture_file_name : image_capture_file_name
       type = (scenario.failed?)? '[Failure]' : '[Normal]'
 
       embed_screenshot( image_capture_file_name )
-      screen_capture_base_path = ENV['WARDEN_RUN_MODE'] == "server" ?  SCREEN_CAPTURE_SERVER : SCREEN_CAPTURE_DIR
-      screen_capture_url = "#{type} screen capture is at: " + screen_capture_base_path + '/' + ENV["WARDEN_TEST_TARGET_NAME"] + '/' +
+      screen_capture_base_path = Warden::Config::run_mode == "server" ?  SCREEN_CAPTURE_SERVER : SCREEN_CAPTURE_DIR
+      screen_capture_url = "#{type} screen capture is at: " + screen_capture_base_path + '/' + Config::test_target_name + '/' +
         image_capture_file_name
       #print FORMATS[:failed].call(screen_capture_url) if scenario.failed? 
 

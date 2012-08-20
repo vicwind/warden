@@ -2,19 +2,21 @@ require "#{ENV['WARDEN_HOME']}/config/env"
 
 ENV["WARDEN_TEST_TARGET_ENV"] = "prd"
 
-ENV["WARDEN_TEST_TARGET_NAME"] = '<%= project_name %>'
+Warden::Config.configure do |c|
+  c.test_target_env = ENV["WARDEN_TEST_TARGET_ENV"]
+  c.test_target_name = '<%= project_name %>'
+  c.project_dir_name = c.test_target_name
 
-ENV["WARDEN_DEBUG_MODE"] = "false"
+  #When it is set to true, it will go into to irb whenever there is an exception
+  #happen in the test case
+  c.debug_mode = false
 
-ENV['WARDEN_RUN_MODE'] = 'local'
+  #Enable this setting if your app need to support
+  #multiple languages locales
+  c.test_target_locale = 'en'
 
-ENV["WARDEN_PROJECT_DIR_NAME"] = ENV['WARDEN_TEST_TARGET_NAME']
-
-#Enable this setting if your app need to support
-#multiple languages locales
-#ENV["WARDEN_TEST_TARGET_LOCALE"] = "en"
-#
-#Enable this setting if your project will uses features
-#and steps files from other locations.
-#It only takes one path or a zip file path
-#ENV["WARDEN_PKG_FEATURES_LIB_PATH"] = ''
+  #Enable this setting if your project will uses features
+  #and steps files from other locations.
+  #It only takes one path or a zip file path
+  c.pkg_features_lib_path = "#{ENV['WARDEN_HOME']}/projects/BuyingGuide"
+end

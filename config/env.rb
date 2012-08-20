@@ -1,10 +1,12 @@
 #require 'capybara/cucumber'
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../core"
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../config"
 
 require 'sauce'
 require 'ruby-debug'
 
+require "#{File.dirname(__FILE__)}/../config/config"
 require "#{File.dirname(__FILE__)}/../core/warden"
 require "#{File.dirname(__FILE__)}/../lib/lib_steps"
 require "#{File.dirname(__FILE__)}/../lib/link_checker"
@@ -27,9 +29,6 @@ Debugger.settings[:autolist] = 10
 # Cleanup log folder before run, this needs to be more
 # sophisticated.
 FileUtils.rm Dir.glob("#{ENV["WARDEN_HOME"]}log/*.yaml")
-
-#Uses test case manager to register scenarios
-ENV['WARDEN_ENABLE_TEST_CASE_REGISTRATION'] = "1"
 
 # Capybara.register_driver :chrome do |app|
 #   Capybara::Selenium::Driver.new(app, :browser => :chrome)
@@ -89,12 +88,15 @@ if ENV['TC_RUN_INFO_IDS'] and !ENV['TC_RUN_INFO_IDS'].empty?
       end
 
       current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg
-      WardenWebInterface.update_test_case_run_info(current_tc_run_info_id,{
+
+      tc_run_info = {
         :status => status,
         :test_case_log => current_scenario_log,
         :screen_capture_links => screen_capture_links.to_json
-        }
-      )
+      }
+      tc_run_info.merge!(external_data: @warden_session.external_data.to_json) if @warden_session.external_data
+
+      WardenWebInterface.update_test_case_run_info(current_tc_run_info_id, tc_run_info)
       # WardenWebInterface.
       #   update_test_case_run_info_status(current_tc_run_info_id, status)
       # current_scenario_log = WardenWebInterface.read_log_from_buffer + exeception_msg
@@ -108,7 +110,7 @@ After do |scenario|
   begin
     @warden_session.capture_screen_shot()# if scenario.failed?
 
-    if scenario.failed? and ENV["WARDEN_DEBUG_MODE"] == "true"
+    if scenario.failed? and Warden::Config::debug_mode
       print "\nYou are in ruby debug mode.\n"
       print scenario.exception.message + "\n"
       print scenario.exception.backtrace.join("\n")
@@ -131,12 +133,12 @@ end
 
 #setup configuration hook for loading feature and steps pkg from a different location
 AfterConfiguration do |config|
-  if ENV["WARDEN_PKG_FEATURES_LIB_PATH"] and ENV["WARDEN_PKG_FEATURES_LIB_PATH"] != ''
+  if Warden::Config::pkg_features_lib_path and Warden::Config::pkg_features_lib_path != ''
     require "#{File.dirname(__FILE__)}/../lib/cucumber_patch"
     pkg_manager = Gerbil.new()
-    tmp_pkg_path = pkg_manager.gerbilnate(ENV["WARDEN_PKG_FEATURES_LIB_PATH"],
+    tmp_pkg_path = pkg_manager.gerbilnate(Warden::Config::pkg_features_lib_path,
                                           Warden::project_path())
-    ENV['WARDEN_PKG_FEATURES_TEMP_PATH'] = tmp_pkg_path #temporary path Gerbil extracted
+    Warden::Config::pkg_features_temp_path = tmp_pkg_path #temporary path Gerbil extracted
                                                       #the files to
     config.pkg_step_and_lib_files(tmp_pkg_path)
     puts config.get_pkg_setup_info()
