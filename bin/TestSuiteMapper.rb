@@ -5,7 +5,7 @@
 #                                                                                          #
 ############################################################################################
 #                                                                                          #
-# Usage: Mapper.rb [options]                                                               #
+# Usage: TestSuiteMapper.rb [options]                                                               #
 #                                                                                          #
 # Specific options:                                                                        #
 #     -t FILENAME                      The location of the Testcase mapping file           #
