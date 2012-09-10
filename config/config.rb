@@ -12,7 +12,7 @@ module Warden
     PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
 
     DEFAULT_GLOBAL_CONFIG = {
-      run_mode:  "server"
+      run_mode:  "local"
     }
 
     class << self
