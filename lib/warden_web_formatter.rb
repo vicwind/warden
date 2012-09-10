@@ -56,7 +56,7 @@ module Cucumber
       # end
     end
 
-    class WardenWebPretty < CucumberFormatter::Debug
+    class WardenWebPretty < Cucumber::Formatter::Pretty
       include FileUtils
       include Console
       include Io
