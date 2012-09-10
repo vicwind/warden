@@ -13,7 +13,14 @@ case $sub_cmd in
     case $opt in
       start)
         echo "Starting..."
-        unicorn_rails -D -c $WARDEN_WEB_HOME/config/unicorn_config.rb
+        if [[ "$1" == "dev" ]];then
+          echo "Rails Env: Development"
+          env_opt="-E development"
+        else
+          echo "Rails Env: Production"
+          env_opt="-E production"
+        fi
+        unicorn_rails -D -c $WARDEN_WEB_HOME/config/unicorn_config.rb $env_opt
         if [ $? == 0 ]; then
           echo "Unicorn app server started."
         else
