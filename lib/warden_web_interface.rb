@@ -96,7 +96,8 @@ module WardenWebInterface
   end
 
   def self.read_log_from_buffer()
-    log_buffer.delete_at(0)
+    log = log_buffer.delete_at(0)
+    log.nil? ? "" : log
   end
 
 end

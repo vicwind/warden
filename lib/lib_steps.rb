@@ -51,7 +51,7 @@ Given /^user is using page objects to access the default test target environment
 
   Warden.add_test_target_detail(step_detail)
   @page = page_class.new(Capybara.current_session, @warden_session)
-  @page.visit
+
 end
 
 # Commonly used steps
