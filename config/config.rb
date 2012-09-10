@@ -11,6 +11,10 @@ module Warden
     APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
     PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
 
+    DEFAULT_GLOBAL_CONFIG = {
+      run_mode:  "server"
+    }
+
     class << self
 
       CONFIG_OPTIONS = [
@@ -24,6 +28,9 @@ module Warden
       attr_accessor *CONFIG_OPTIONS
 
       def configure
+        #setting default global config
+        self.run_mode = DEFAULT_GLOBAL_CONFIG[:run_mode]
+
         yield self
       end
     end
