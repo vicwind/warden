@@ -15,7 +15,8 @@ class LinkChecker
   end
 
   def broken_link?(url)
-     res = Typhoeus::Request.get(url, {:follow_location => true, :max_redirects=>5})    
+    header = {"Accept" => "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Cache-Control" => "no-cache", "Pragma" => "no-cache", "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.168 Safari/535.19"}
+    res = Typhoeus::Request.get(url, {:headers=>header, :follow_location => true, :max_redirects=>5})    
     if ( !( res.code == 200 ) )
       return true
       else
@@ -28,12 +29,13 @@ class LinkChecker
   def run
     hydra = Typhoeus::Hydra.new
     hydra.disable_memoization
+    header = {"Accept" => "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Cache-Control" => "no-cache", "Pragma" => "no-cache", "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.168 Safari/535.19"}
     @broken_links = {}
     
     # For every link, add it to the queue
     @links_to_check.each { |sku,url|
     
-      req = Typhoeus::Request.new(url,{:max_redirects=>5})
+      req = Typhoeus::Request.new(url,{:max_redirects=>5, :headers=>header})
            
       #collect links to validate in parallel
       req.on_complete { |res|
