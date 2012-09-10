@@ -6,6 +6,7 @@ gem 'mysql2'
 gem 'resque'
 gem 'less-rails-bootstrap' #get Twiter boostrap and LESS
 gem 'daemon-spawn'
+gem 'psych'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
