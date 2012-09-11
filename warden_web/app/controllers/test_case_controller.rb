@@ -71,7 +71,7 @@ class TestCaseController < ApplicationController
     project_names.each do |project_name, tcs|
 
       project_suite_file_paths.
-        grep(/#{project_name}/).each do |suite_file_path|
+        grep(%r{#{WARDEN_PROJECTS_PATH}/#{project_name}/}).each do |suite_file_path|
 
         suite_file_relative_path =
           suite_file_path.sub(/.*#{WARDEN_PROJECTS_PATH}/,'')
