@@ -4,6 +4,11 @@ if [ "$1" == "" ];then
 	exit 1
 fi
 
+if [ ! -f $WARDEN_HOME/projects ]; then
+  echo "Creating ./projects dir.."
+  mkdir $WARDEN_HOME/projects
+fi
+
 project_path=$WARDEN_HOME/projects/$1
 
 echo "Creating project $1 at $project_path ..."

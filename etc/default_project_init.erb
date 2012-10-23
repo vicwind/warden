@@ -15,6 +15,10 @@ Warden::Config.configure do |c|
   #multiple languages locales
   c.test_target_locale = 'en'
 
+  #Enable this setting will drop you in irb session when there is failures or
+  #exception in the test run
+  c.debug_mode = true
+
   #Enable this setting if your project will uses features
   #and steps files from other locations.
   #It only takes one path or a zip file path

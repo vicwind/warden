@@ -11,7 +11,7 @@ require "#{File.dirname(__FILE__)}/../core/warden"
 require "#{File.dirname(__FILE__)}/../lib/lib_steps"
 require "#{File.dirname(__FILE__)}/../lib/link_checker"
 require "#{File.dirname(__FILE__)}/../lib/price_rogue"
-require "#{File.dirname(__FILE__)}/../lib/page_objects"
+# require "#{File.dirname(__FILE__)}/../lib/page_objects" #this is not needed until we have page obejcts
 require "#{File.dirname(__FILE__)}/../lib/gerbil"
 require "#{File.dirname(__FILE__)}/../lib/cucumber_formatter"
 require "#{File.dirname(__FILE__)}/../lib/warden_web_formatter"
@@ -24,7 +24,7 @@ World(Warden)
   # include Warden
 # end
 Debugger.settings[:autoeval] = true
-Debugger.settings[:autolist] = 1
+Debugger.settings[:autolist] = 0
 
 # Cleanup log folder before run, this needs to be more
 # sophisticated.
