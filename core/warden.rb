@@ -82,7 +82,14 @@ module Warden
     file_path = "#{image_capture_project_path}/#{image_capture_file_name}"
 
     File.open(file_path,'wb') do |f|
-      f.write(Base64.decode64(page.driver.browser.screenshot_as(:base64)))
+      case Capybara.current_driver
+        when :selenium
+          f.write(Base64.decode64(page.driver.browser.screenshot_as(:base64)))
+        when :webkit
+          page.driver.render(f.path)
+        else
+          puts "Doesn't support screen capture for driver '#{Capybara.current_driver}'"
+      end
     end
   end
 

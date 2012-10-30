@@ -10,3 +10,5 @@ gem 'rubyzip'
 gem 'curb'
 gem "faraday" #HTTP/REST API client library.
 gem 'psych'
+gem 'capybara-webkit'
+gem 'capybara-mechanize'
