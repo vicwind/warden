@@ -1,5 +1,5 @@
 When /^Change test target environment to "(.*)" for "(.*)" application$/ do |app_env, app_name|
-  Capybara.app_host = Warden::APP_ENV[app_env][app_name]
+  Capybara.app_host = Warden::Config.app_env[app_env][app_name]
   step_detail = "Target environment '#{app_env}', " +
     "test application '#{app_name}'"
   step_detail += " with locale '#{Warden::Config::test_target_locale}'" if Warden::Config::test_target_locale
@@ -9,7 +9,7 @@ When /^Change test target environment to "(.*)" for "(.*)" application$/ do |app
 end
 
 When /^Change to default test target environment for "(.*)" application$/ do |app_name|
-  Capybara.app_host = Warden::APP_ENV[ Warden::Config::test_target_env ][ app_name ]
+  Capybara.app_host = Warden::Config.app_env[ Warden::Config::test_target_env ][ app_name ]
   step_detail = "Target environment '#{Warden::Config::test_target_env}', " +
     "test application '#{app_name}'"
   step_detail += " with locale '#{Warden::Config::test_target_locale}'" if Warden::Config::test_target_locale
@@ -19,7 +19,7 @@ When /^Change to default test target environment for "(.*)" application$/ do |ap
 end
 
 When /^Change to default test target environment for the test application$/ do
-  Capybara.app_host = Warden::APP_ENV[ Warden::Config::test_target_env ][ Warden::Config::test_target_name ]
+  Capybara.app_host = Warden::Config.app_env[ Warden::Config::test_target_env ][ Warden::Config::test_target_name ]
   step_detail = "Target environment '#{Warden::Config::test_target_name}', " +
     "test application '#{Config::test_target_name}'"
   step_detail += " with locale '#{Warden::Config::test_target_locale}'" if Warden::Config::test_target_locale
@@ -41,7 +41,7 @@ end
 # end
 
 Given /^user is using page objects to access the default test target environment for the test application$/ do
-  Capybara.app_host = Warden::APP_ENV[ Warden::Config::test_target_env ][ Warden::Config::test_target_name ]
+  Capybara.app_host = Warden::Config.app_env[ Warden::Config::test_target_env ][ Warden::Config::test_target_name ]
   page_name = Warden::Config::test_target_name
 
   page_class = Object.const_get("#{ Warden::PAGE_OBJECTS[page_name] }")

@@ -1,14 +1,15 @@
+require 'active_support/core_ext/hash'
+
 module Warden
   module Config
 
     #Uses test case manager to register scenarios
     ENABLE_TEST_CASE_REGISTRATION = true
 
-    WEB_BASE_URL = "http://localhost:5000"
+    WEB_BASE_URL = "http://localhost:3000"
 
     SCREEN_CAPTURE_DIR = "#{ENV["WARDEN_HOME"]}/screen-capture"
     SCREEN_CAPTURE_SERVER = "http://#{`hostname`.strip}:8080/screen-capture"
-    APP_ENV = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")["app_environment"]
     PAGE_OBJECTS = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/page_objects.yaml")["page_objects"]
 
     DEFAULT_GLOBAL_CONFIG = {
@@ -22,7 +23,7 @@ module Warden
         :screen_capture_dir, :screen_capture_server, :app_env,
         :page_objects, :debug_mode, :run_mode, :project_dir_name, :test_target_locale,
         :pkg_features_lib_path, :pkg_features_temp_path, :test_target_env,
-        :test_target_name
+        :test_target_name, :app_env
       ]
 
       attr_accessor *CONFIG_OPTIONS
@@ -33,7 +34,26 @@ module Warden
 
         yield self
       end
-    end
+
+      #this method will load the default app_env.yaml file and merge it with the project
+      #level app_env.yaml, and the project level configuration will take precedence
+      def app_env
+        return @app_env if @app_env
+
+        global_app_env = YAML::load_file("#{ENV['WARDEN_CONFIG_DIR']}/app_env.yaml")
+        project_app_env_file_path = "#{Warden::project_path}/etc/app_env.yaml"
+
+        if File.exists?(project_app_env_file_path)
+          project_app_env = YAML::load_file("#{Warden::project_path}/etc/app_env.yaml")
+          global_app_env.deep_merge!(project_app_env)
+        end
+
+        @app_env = global_app_env['app_environment']
+      end
+    end #of class method
+
 
   end
+
+
 end
