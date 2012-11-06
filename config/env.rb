@@ -4,6 +4,8 @@ $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../config"
 
 require 'sauce'
+require 'capybara/mechanize/cucumber'
+require "capybara-webkit"
 require 'ruby-debug'
 
 require "#{File.dirname(__FILE__)}/../config/config"
@@ -34,7 +36,7 @@ FileUtils.rm Dir.glob("#{ENV["WARDEN_HOME"]}log/*.yaml")
 #   Capybara::Selenium::Driver.new(app, :browser => :chrome)
 # end
 
-#Capybara.javascript_driver = :chrome
+# Capybara.javascript_driver = :chrome
 
 Capybara.configure do |config|
   config.run_server = false
