@@ -1,4 +1,3 @@
-
 Warden is created to aim at better managed running automated test cases that's written using Cucumber and Capybara for multiple web application projects. It tries to leverage a proofed working pattern to organize test logic, test data, and naming mapping to help managing a large QA project that usually contains hundreds of test cases.
 
 By following the gradually modularization work flow: Record and play back -> enhance to script for robustness and add test logic and data separation -> modularize commonly used steps -> maximize modularization using page objects, we hope Warden will help us implement test case as fast as developing features and also lower the costs of maintaining constant changes of a evolving web application.
@@ -14,6 +13,7 @@ Warden is developed on Mac OS 10.6.8 using ruby 1.9.2p290, cucumber (1.1.4), cap
 
 * Install Ruby 1.9.2 through [RVM](http://beginrescueend.com/rvm/install/).
 * Install Bundler `gem install bundler`, and install all the require gems by doing `bundle install`
+** (you may need to install native pkg for QT([QT install help](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit)) and libcurl-devel
 * Setup WARDEN_CONFIG_DIR & WARDEN_HOME environment variables in the `<warden dir>/.rvmrc` file to point the project root dir and it’s config dir
 
 ```bash
