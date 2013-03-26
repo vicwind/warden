@@ -98,9 +98,17 @@ class TestRunJob < ActiveRecord::Base
     system(cmd)
     puts
     puts "------BEFORE-----------#{puts self.attributes}"
-    self.status = "Done"
-    puts "Saving job #{self.status}"
-    save!
+    TestCaseRunInfo.transaction do
+      number_of_unfinish_tc =
+        TestCaseRunInfo.where(test_run_job_id: self.id).
+          where( "status in ('Running', 'Queued')").lock(true).count
+      if number_of_unfinish_tc == 0
+        self.lock!
+        self.status = "Done"
+        puts "Saving job #{self.status}"
+      end
+      save!
+    end
     puts "------AFTER-----------#{puts self.attributes}"
   end
 
