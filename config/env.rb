@@ -44,16 +44,6 @@ Capybara.configure do |config|
   config.default_wait_time = 20 #for ajax heavy site, site it to a higher number
 end
 
-require 'sauce/capybara'
-
-Sauce.config do |config|
-  config.username = ""
-  config.access_key = ""
-  config.browser = "firefox"
-  config.os = "Windows 2003"
-  config.browser_version = "7"
-end
-
 Before do |scenario|
 
   ENV[ "WARDEN_TEST_TARGET_ENV" ] = "prd" if ENV[ "WARDEN_TEST_TARGET_ENV" ].nil?
