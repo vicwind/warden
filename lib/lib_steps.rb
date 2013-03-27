@@ -5,6 +5,7 @@ When /^Change test target environment to "(.*)" for "(.*)" application$/ do |app
   step_detail += " with locale '#{Warden::Config::test_target_locale}'" if Warden::Config::test_target_locale
 
   Warden.add_test_target_detail(step_detail)
+  setup_proxy_for_current_driver if Warden::Config.http_proxy_setting
   visit("/")
 end
 
@@ -15,6 +16,7 @@ When /^Change to default test target environment for "(.*)" application$/ do |ap
   step_detail += " with locale '#{Warden::Config::test_target_locale}'" if Warden::Config::test_target_locale
 
   Warden.add_test_target_detail(step_detail)
+  setup_proxy_for_current_driver if Warden::Config.http_proxy_setting
   visit("/")
 end
 
@@ -25,6 +27,7 @@ When /^Change to default test target environment for the test application$/ do
   step_detail += " with locale '#{Warden::Config::test_target_locale}'" if Warden::Config::test_target_locale
 
   Warden.add_test_target_detail(step_detail)
+  setup_proxy_for_current_driver if Warden::Config.http_proxy_setting
   visit("/")
 end
 
@@ -50,6 +53,7 @@ Given /^user is using page objects to access the default test target environment
   step_detail += " with locale '#{Warden::Config::test_target_locale}'" if Warden::Config::test_target_locale
 
   Warden.add_test_target_detail(step_detail)
+  setup_proxy_for_current_driver if Warden::Config.http_proxy_setting
   @page = page_class.new(Capybara.current_session, @warden_session)
 
 end
@@ -62,9 +66,9 @@ And /^the user clicked the "([^"]*)" button$/ do |type|
     @page.click_type_button_one
   when "@type_button_two"
     @page.click_type_button_two
-  when "@type_button_three" 
+  when "@type_button_three"
     @page.click_type_button_three
-  end  
+  end
 end
 
 When /^the user clicked the category "([^"]*)" button$/ do |category|
@@ -73,8 +77,8 @@ When /^the user clicked the category "([^"]*)" button$/ do |category|
     @page.click_category_button_one
   when "@category_button_two"
     @page.click_category_button_two
-  when "@category_button_three"  
-    @page.click_category_button_three  
+  when "@category_button_three"
+    @page.click_category_button_three
   when "@category_browse_button_one"
     @page.click_category_browse_button_one
   when "@category_browse_button_two"

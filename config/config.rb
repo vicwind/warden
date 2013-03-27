@@ -23,7 +23,7 @@ module Warden
         :screen_capture_dir, :screen_capture_server, :app_env,
         :page_objects, :debug_mode, :run_mode, :project_dir_name, :test_target_locale,
         :pkg_features_lib_path, :pkg_features_temp_path, :test_target_env,
-        :test_target_name, :app_env
+        :test_target_name, :app_env, :http_proxy_setting
       ]
 
       attr_accessor *CONFIG_OPTIONS
@@ -49,6 +49,25 @@ module Warden
         end
 
         @app_env = global_app_env['app_environment']
+      end
+
+      #enable the underlining driver to use proxy server for communication
+      #params:
+      #  proxy_server: the proxy server name or ip
+      #  port: the proxy server's port
+      #  user_name: user name
+      #  password: password of the user name
+      def setup_proxy(proxy_server, port, user_name = nil, password = nil)
+        self.http_proxy_setting = {
+          http: {
+            server: proxy_server,
+            port: port
+          }
+        }
+        if user_name and password
+          self.http_proxy_setting[:http][:user_name] = user_name
+          self.http_proxy_setting[:http][:password] = password
+        end
       end
     end #of class method
 

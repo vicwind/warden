@@ -99,6 +99,19 @@ module Warden
     @warden_session.translate(*args)
   end
 
+  #use the setting on the config object to setup http proxy for the current
+  #driver
+  def setup_proxy_for_current_driver
+    server = Config::http_proxy_setting[:http][:server]
+    port = Config::http_proxy_setting[:http][:port]
+    user_name = Config::http_proxy_setting[:http][:user_name]
+    password = Config::http_proxy_setting[:http][:password]
+
+    puts "Using Proxy Server #{server} on poart #{port}"
+    if Capybara.current_driver == :mechanize
+      page.driver.browser.agent.set_proxy(server, port, user_name, password)
+    end
+  end
   #####################
   ##Warden class method
   #####################
