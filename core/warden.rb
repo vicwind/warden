@@ -107,7 +107,7 @@ module Warden
     user_name = Config::http_proxy_setting[:http][:user_name]
     password = Config::http_proxy_setting[:http][:password]
 
-    puts "Using Proxy Server #{server} on poart #{port}"
+    puts "Using Proxy Server #{server} on port #{port}"
     if Capybara.current_driver == :mechanize
       page.driver.browser.agent.set_proxy(server, port, user_name, password)
     end
